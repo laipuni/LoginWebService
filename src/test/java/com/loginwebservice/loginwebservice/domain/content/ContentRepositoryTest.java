@@ -1,5 +1,6 @@
 package com.loginwebservice.loginwebservice.domain.content;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,11 @@ class ContentRepositoryTest {
 
     @Autowired
     ContentRepository contentRepository;
+
+    @BeforeEach
+    void tearUp(){
+        contentRepository.deleteAllInBatch();
+    }
 
     @DisplayName("기록된 컨텐츠들을 최신순으로 조회한다")
     @Test
@@ -38,8 +44,7 @@ class ContentRepositoryTest {
         assertThat(contents).hasSize(2)
                 .extracting("contents")
                 .containsExactly(
-                        "내용2",
-                        "내용1"
+                        "내용2", "내용1"
                 );
     }
 
