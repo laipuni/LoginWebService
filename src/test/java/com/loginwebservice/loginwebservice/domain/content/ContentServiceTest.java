@@ -41,7 +41,7 @@ class ContentServiceTest {
                         contents
                 );
         assertThat(response)
-                .extracting("id","date","contents")
+                .extracting("contentId","createDate","contents")
                 .containsExactly(
                         content.getId(),content.getCreateDate(),content.getContents()
                 );
