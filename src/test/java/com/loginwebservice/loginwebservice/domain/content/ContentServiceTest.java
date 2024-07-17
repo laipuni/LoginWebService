@@ -2,6 +2,7 @@ package com.loginwebservice.loginwebservice.domain.content;
 
 import com.loginwebservice.loginwebservice.ContentAddResponse;
 import com.loginwebservice.loginwebservice.domain.content.request.ContentAddRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ class ContentServiceTest {
     @Autowired
     ContentRepository contentRepository;
 
+    @BeforeEach
+    void tearUp(){
+        contentRepository.deleteAllInBatch();
+    }
 
     @DisplayName("기록할 내용을 받아서 기록 한다")
     @Test
