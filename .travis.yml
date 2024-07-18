@@ -1,0 +1,37 @@
+language: java
+jdk:
+  - openjdk17
+
+branches:
+  only:
+    - main
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+before_deploy:
+  - zip -r login-webservice *
+  - mkdir -p deploy
+  - mv login-webservice.zip deploy/
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: login-webservice-build
+    region: np-northeast-2
+    skip_cleanup: false
+    acl: private #zip파일 접근을 private로
+    local_dir: deploy # s3에 올릴 디렉토리 지정
+    wait-until-deployed : true
+
+#CI 실행 완료시 메일로 알람
+notifications: #공고
+  email:
+    recipients:
+      - 2tgb02023@gmail.com
