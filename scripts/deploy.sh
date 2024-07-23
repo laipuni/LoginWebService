@@ -9,7 +9,7 @@ cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
 
 echo "> Check Running Application"
 
-CURRENT_PID=$(pgrep -fl LoginWebService | grep jar | awk '{print $1}')
+CURRENT_PID=$(pgrep -fl LoginWebService | awk '{print $1}')
 
 echo "> Running Application Pid : $CURRENT_PID"
 
