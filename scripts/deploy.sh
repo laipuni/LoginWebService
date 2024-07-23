@@ -33,5 +33,5 @@ chmod +x $JAR_NAME
 
 nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
 
-$JAR_NAME > $REPOSITORY/nohub.out 2>&1 &
+$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 
