@@ -3,6 +3,8 @@
 REPOSITORY=/home/ec2-user/app
 PROJECT_NAME=LoginWebService
 
+cd $REPOSITORY
+
 echo "> Copy Build File"
 
 cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
