@@ -35,6 +35,7 @@ chmod +x $JAR_NAME
 
 nohup java -jar \
     -Dspring.config.location=/home/ec2-user/app/application-real-db.yml \
+    -Dspring.profiles.active=real \
     $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 
 
