@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <title>Title</title>
 </head>
-<body>
+<body >
     <main>
         <div class="container w-25">
             <h2 class="text-center mb-3">하고싶은 말을 적어주세요!</h2>
@@ -21,64 +21,8 @@
             <div id="inputResultDiv"></div>
         </div>
     </main>
-
-    <script th:inline="javascript">
-        $(window).on('load',()=>{
-            $.get("/content")
-                .done((result)=>{
-                    if(result.status.match("OK")){
-                        $.each(result.data.contents,(index,content)=>{
-                            const contentDiv = `
-                                    <div id="content${content.contentId}">
-                                            <b>${content.contents}</b>
-                                            <p style="font-size: 0.6rem">${content.createDate}</p>
-                                    </div>
-                                    `
-                            $("#inputResultDiv").append(contentDiv)
-                        })
-                    } else{
-                        alert("알 수 없는 에러가 발생했습니다.")
-                        $("#inputError").text(result.message)
-                    }
-                })
-                .fail((error)=>{
-                    console.log(JSON.stringify(error))
-                })
-        })
-
-        $(document).on('submit','form', (event) => {
-            event.preventDefault()
-            const content = $('#content').val();
-            $.ajax({
-                url:'/content',
-                type:'post',
-                contentType:'application/json',
-                data:JSON.stringify(content)
-            })
-                .done(function (result){
-                    if(result.status.match("CREATED")){
-                        $("#inputError").text("")
-                        $("input").val("")
-                        const contentDiv = `
-                                    <div id="content${result.data.contentId}">
-                                            <b>${result.data.contents}</b>
-                                            <p style="font-size: 0.6rem">${result.data.createDate}</p>
-                                    </div>
-                                    `
-                        $("#inputResultDiv").prepend(contentDiv)
-                    } else{
-                        $("#inputError").text(result.message)
-                    }
-                })
-                .fail((error) => {
-                    console.log("fail" + JSON.stringify(error.responseJSON))
-                    $("#inputError").text(error.responseJSON.message)
-                })
-        })
-
-        $(document).on('animationend',"#inputResultDiv",()=>{
-            $("#inputResultDiv").removeClass("isAnimate")
-        })
-    </script>
+    <th:block th:replace="/fragment/contentFragment :: contentScript()"></th:block>
+    <th:block th:replace="/fragment/htmlBlockFragment :: f12Block()"></th:block>
+    <th:block th:replace="/fragment/htmlBlockFragment :: rightClickBlock()"></th:block>
 </body>
 </html>
