@@ -7,8 +7,6 @@ source ${ABSDIR}/profile.sh
 REPOSITORY=/home/ec2-user/app
 PROJECT_NAME=LoginWebService
 
-cp $REPOSITORY/*.jar $REPOSITORY/
-
 echo "> 새 애플리케이션 배포"
 JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
 
