@@ -2,7 +2,7 @@
 
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname ${ABSPATH})
-source ABSDIR/profile.sh
+source ${ABSDIR}/profile.sh
 
 REPOSITORY=/home/ec2-user/app
 PROJECT_NAME=LoginWebService
@@ -28,7 +28,7 @@ IDLE_PROFILE=$(find_idle_profile)
 echo "> $JAR_NAME를 profile=$IDLE_PROFILE로 실행합니다."
 
 nohup java -jar \
-    -Dspring.config.location=classpath:/application.properties,
-    classpath:/application-$IDLE_PROFILE.properties \
+    -Dspring.config.location=home/ec2-user/app/application-real-db.yml,
+    classpath:/application-$IDLE_PROFILE.yml \
     -Dspring.profiles.active=$IDLE_PROFILE \
     $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
