@@ -31,7 +31,9 @@ echo "> add Excution previlage to $JAR_NAME"
 
 chmod +x $JAR_NAME
 
-nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
+nohup java -jar \
+    -Dspring.config.location=/home/ec2-user/app/application-real-db.yml \
+    $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 
-$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+
 
