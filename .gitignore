@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 /src/main/resources/application.*
 /src/main/resources/application-yml.tar
+/src/main/resources/application-oauth.yml
 
 ### STS ###
 .apt_generated
