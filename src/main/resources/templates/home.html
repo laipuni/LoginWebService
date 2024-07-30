@@ -10,12 +10,13 @@
     <title>Title</title>
 </head>
 <body class="py-5 bg-body-tertiary">
-    <th:block th:replace="fragment/header.html :: header()"></th:block>
+    <th:block th:replace="~{fragment/header.html :: header()}"></th:block>
     <main>
         <div class="container w-25">
             <span style="font-size: 0.7rem">ver1.0.1</span>
             <div id="inputError"></div>
             <form class="input-group mb-3">
+                <input type="hidden" id="csrfTokenInput" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <input type="text" class="form-control" id="content" placeholder="input...">
                 <button type="submit" class="btn btn-primary">입력</button>
             </form>
