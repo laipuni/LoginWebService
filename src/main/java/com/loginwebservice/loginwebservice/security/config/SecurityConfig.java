@@ -22,7 +22,7 @@ public class SecurityConfig {
                         .requestMatchers("/content","/").authenticated()
                 )
                 .authorizeHttpRequests((authorize)-> authorize
-                        .requestMatchers("/login","/users/join").permitAll()
+                        .requestMatchers("/login","/users/join","/profile").permitAll()
                 )
                 .formLogin(
                         (login)-> login
