@@ -12,12 +12,16 @@ public class ContentViewResponse {
     private Long contentId;
     private String contents;
     private LocalDate createDate;
+    private String userName;
+    private String picture;
 
     @Builder
-    private ContentViewResponse(final Long contentId, final String contents, final LocalDate createDate) {
+    private ContentViewResponse(final Long contentId, final String contents, final LocalDate createDate,final String userName, final String picture) {
         this.contentId = contentId;
         this.contents = contents;
         this.createDate = createDate;
+        this.userName = userName;
+        this.picture = picture;
     }
 
     public static ContentViewResponse of(Content content){
@@ -25,6 +29,8 @@ public class ContentViewResponse {
                 .contentId(content.getId())
                 .contents(content.getContents())
                 .createDate(content.getCreateDate())
+                .userName(content.getUserName())
+                .picture(content.getPicture())
                 .build();
     }
 }
