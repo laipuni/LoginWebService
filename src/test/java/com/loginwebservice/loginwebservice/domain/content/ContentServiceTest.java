@@ -1,16 +1,19 @@
 package com.loginwebservice.loginwebservice.domain.content;
 
-import com.loginwebservice.loginwebservice.ContentAddResponse;
 import com.loginwebservice.loginwebservice.IntegrationTest;
-import com.loginwebservice.loginwebservice.domain.content.request.ContentAddRequest;
+import com.loginwebservice.loginwebservice.domain.content.request.ContentAddServiceRequest;
+import com.loginwebservice.loginwebservice.domain.user.Role;
+import com.loginwebservice.loginwebservice.domain.user.User;
+import com.loginwebservice.loginwebservice.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 class ContentServiceTest extends IntegrationTest {
 
@@ -20,35 +23,61 @@ class ContentServiceTest extends IntegrationTest {
     @Autowired
     ContentRepository contentRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @BeforeEach
     void tearUp(){
         contentRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @DisplayName("기록할 내용을 받아서 기록 한다")
+    @Transactional
     @Test
     void save(){
         //given
+        String expectedEmail = "email@gmail.com";
+        String expectedName = "laipuni";
+        User user = User.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .role(Role.GUEST)
+                .build();
+        userRepository.save(user);
         String contents = "안녕하세요";
-        ContentAddRequest request = ContentAddRequest.builder()
+        ContentAddServiceRequest request = ContentAddServiceRequest.builder()
                 .content(contents)
+                .email(expectedEmail)
                 .build();
         //when
-        ContentAddResponse response = contentService.save(request);
+        contentService.save(request);
         List<Content> contentList = contentRepository.findAll();
-        Content content = contentList.get(0);
-
         //then
         assertThat(contentList).hasSize(1)
-                .extracting("contents")
+                .extracting("contents","userName")
                 .containsExactlyInAnyOrder(
-                        contents
+                        tuple(contents,expectedName)
                 );
-        assertThat(response)
-                .extracting("contentId","createDate","contents")
-                .containsExactly(
-                        content.getId(),content.getCreateDate(),content.getContents()
-                );
+        assertThat(contentList.get(0).getUser())
+                .extracting("name","email")
+                .containsExactly(expectedName,expectedEmail);
+    }
+
+    @DisplayName("유저가 존재 하지않는 경우 에러가 발생한다.")
+    @Test
+    void saveWithNotExistUser(){
+        //given
+        String contents = "안녕하세요";
+        ContentAddServiceRequest request = ContentAddServiceRequest.builder()
+                .content(contents)
+                .email("email@gmail.com")
+                .build();
+        //when
+        //then
+        assertThatThrownBy(() -> contentService.save(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("해당 유저는 존재하지 않습니다.");
     }
 
 }
