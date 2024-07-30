@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+</head>
+<body>
+  <div th:fragment="header()" id="header" class="mb-5 w-25">
+    <header class="p-3 border-bottom fixed-top bg-dark">
+      <div class="container">
+        <div class="b-example-divider"></div>
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <span class="fs-4">Home</span>
+          </a>
+
+          <div class="text-end">
+            <button onclick="location.href='/logout'" type="button" class="btn btn-outline-light">로그아웃</button>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+
+  <div th:fragment="footer()" class="footer">
+    <p class="">&copy; 2024 laipuni.</p>
+  </div>
+</body>
+</html>
