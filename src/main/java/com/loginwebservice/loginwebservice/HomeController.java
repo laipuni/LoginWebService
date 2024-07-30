@@ -1,18 +1,26 @@
 package com.loginwebservice.loginwebservice;
 
+import com.loginwebservice.loginwebservice.security.oauth2.dto.SessionUser;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
 
-    @GetMapping("/")
-    public String home(){
-        return "home";
-    }
+    private final HttpSession httpSession;
 
-    @GetMapping("/login")
-    public String login(){
-        return "login/login";
+    @GetMapping("/")
+    public String home(Model model){
+        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+
+        if(user != null){
+            model.addAttribute("user",user);
+        }
+
+        return "home";
     }
 }
