@@ -1,10 +1,13 @@
 package com.loginwebservice.loginwebservice.domain.content;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.loginwebservice.loginwebservice.ContentAddResponse;
+import com.loginwebservice.loginwebservice.domain.content.response.ContentAddResponse;
 import com.loginwebservice.loginwebservice.domain.content.request.ContentAddRequest;
+import com.loginwebservice.loginwebservice.domain.content.request.ContentAddServiceRequest;
 import com.loginwebservice.loginwebservice.domain.content.response.ContentListResponse;
 import com.loginwebservice.loginwebservice.domain.content.response.ContentViewResponse;
+import com.loginwebservice.loginwebservice.security.resolver.dto.LoginUser;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,12 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,8 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ContentController.class)
 class ContentControllerTest {
 
-    @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    WebApplicationContext context;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -34,7 +46,16 @@ class ContentControllerTest {
     @MockBean
     ContentService contentService;
 
+    @BeforeEach
+    public void setUp(){
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+
     @DisplayName("콘텐츠들 조회 Api")
+    @WithMockUser()
     @Test
     void getContents() throws Exception {
         //given
@@ -43,6 +64,7 @@ class ContentControllerTest {
                         .contents("내용1")
                         .build()
         );
+
         List<ContentViewResponse> contentViewResponseList = contentList.stream()
                 .map(ContentViewResponse::of)
                 .toList();
@@ -65,6 +87,7 @@ class ContentControllerTest {
     }
 
     @DisplayName("내용 등록 Api")
+    @WithMockUser()
     @Test
     void homeInput() throws Exception {
         //given
@@ -72,7 +95,13 @@ class ContentControllerTest {
                 .content("안녕하세요")
                 .build();
 
+        LoginUser user = LoginUser.builder()
+                .email("email@gmail.com")
+                .name("라이푸니")
+                .build();
+
         String data = objectMapper.writeValueAsString(request);
+        Authentication authentication = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
 
         ContentAddResponse response = ContentAddResponse.builder()
                 .contentId(0L)
@@ -80,16 +109,16 @@ class ContentControllerTest {
                 .createDate(LocalDate.of(2024,7,15))
                 .build();
 
-        Mockito.when(contentService.save(Mockito.any(ContentAddRequest.class)))
+        Mockito.when(contentService.save(Mockito.any(ContentAddServiceRequest.class)))
                 .thenReturn(response);
 
         //when
         //then
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/content")
+                                .with(csrf())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(data)
-
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -99,6 +128,7 @@ class ContentControllerTest {
     }
 
     @DisplayName("빈 내용이 요청으로 올 경우 에러가 발생한다.")
+    @WithMockUser()
     @Test
     void homeInputWithBlankContents() throws Exception {
         //given
@@ -114,13 +144,14 @@ class ContentControllerTest {
                 .createDate(LocalDate.of(2024,7,15))
                 .build();
 
-        Mockito.when(contentService.save(Mockito.any(ContentAddRequest.class)))
+        Mockito.when(contentService.save(Mockito.any(ContentAddServiceRequest.class)))
                 .thenReturn(response);
 
         //when
         //then
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/content")
+                                .with(csrf())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(data)
 
