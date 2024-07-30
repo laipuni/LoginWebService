@@ -1,4 +1,4 @@
-package com.loginwebservice.loginwebservice;
+package com.loginwebservice.loginwebservice.domain.content.response;
 
 import com.loginwebservice.loginwebservice.domain.content.Content;
 import lombok.AccessLevel;
@@ -15,12 +15,16 @@ public class ContentAddResponse {
     private Long contentId;
     private LocalDate createDate;
     private String contents;
+    private String userName;
+    private String picture;
 
     @Builder
-    private ContentAddResponse(final Long contentId, final LocalDate createDate, final String contents) {
+    private ContentAddResponse(final Long contentId, final LocalDate createDate, final String contents,final String picture, final String userName) {
         this.contentId = contentId;
         this.createDate = createDate;
         this.contents = contents;
+        this.picture = picture;
+        this.userName = userName;
     }
 
     public static ContentAddResponse of(final Content content) {
@@ -28,6 +32,8 @@ public class ContentAddResponse {
                 .contentId(content.getId())
                 .createDate(content.getCreateDate())
                 .contents(content.getContents())
+                .userName(content.getUserName())
+                .picture(content.getPicture())
                 .build();
     }
 }
