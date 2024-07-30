@@ -15,9 +15,9 @@ public class ContentAddServiceRequest {
         this.email = email;
     }
 
-    public static ContentAddServiceRequest of(final String content, final String email){
+    public static ContentAddServiceRequest of(final ContentAddRequest contentAddRequest, final String email){
         return ContentAddServiceRequest.builder()
-                .content(content)
+                .content(contentAddRequest.getContent())
                 .email(email)
                 .build();
     }
