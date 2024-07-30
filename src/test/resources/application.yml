@@ -10,3 +10,14 @@ spring:
       ddl-auto: create
     show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
+---
+#spring test oauth
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope: email, profile
