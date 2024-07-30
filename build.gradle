@@ -36,6 +36,7 @@ dependencies {
 
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -45,6 +46,13 @@ dependencies {
 
     //h2 database
     testRuntimeOnly 'com.h2database:h2'
+
+    //spring security
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    testImplementation "org.springframework.security:spring-security-test"
+
+    //oauth2.0
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
