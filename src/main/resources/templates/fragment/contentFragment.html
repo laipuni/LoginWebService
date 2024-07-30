@@ -45,9 +45,11 @@
     $(document).on('submit','form', (event) => {
         event.preventDefault()
         const content = $('#content').val();
+        const csrfToken = $("#csrfTokenInput").val();
         $.ajax({
             url:'/content',
             type:'post',
+            headers:{"X-CSRFToken":csrfToken},
             contentType:'application/json',
             data:JSON.stringify(content)
         })
