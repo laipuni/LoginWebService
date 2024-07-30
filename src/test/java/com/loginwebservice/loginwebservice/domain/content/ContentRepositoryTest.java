@@ -25,14 +25,18 @@ class ContentRepositoryTest extends IntegrationTest {
     @Test
     void findAllOrderByIdDesc(){
         //given
+        String first = "내용1";
+        String second = "내용2";
         Content content1 = Content.builder()
-                .contents("내용1")
+                .contents(first)
+                .userName("유저1")
                 .build();
 
         contentRepository.save(content1);
 
         Content content2 = Content.builder()
-                .contents("내용2")
+                .contents(second)
+                .userName("유저2")
                 .build();
 
         contentRepository.save(content2);
@@ -44,7 +48,7 @@ class ContentRepositoryTest extends IntegrationTest {
         assertThat(contents).hasSize(2)
                 .extracting("contents")
                 .containsExactly(
-                        "내용2", "내용1"
+                        second, first
                 );
     }
 
