@@ -12,11 +12,12 @@
 <body class="py-5 bg-body-tertiary">
     <th:block th:replace="~{fragment/header.html :: header()}"></th:block>
     <main>
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
         <div class="container w-25">
             <span style="font-size: 0.7rem">ver1.0.1</span>
             <div id="inputError"></div>
-            <form class="input-group mb-3">
-                <input type="hidden" id="csrfTokenInput" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <form id="contentForm" class="input-group mb-3">
                 <input type="text" class="form-control" id="content" placeholder="input...">
                 <button type="submit" class="btn btn-primary">입력</button>
             </form>
