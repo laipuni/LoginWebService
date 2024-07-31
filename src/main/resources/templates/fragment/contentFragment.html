@@ -47,7 +47,6 @@
         const content = $('#content').val();
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
-        alert("전송=" + token + ", " + header)
         $.ajax({
             url:'/content',
             type:'post',
