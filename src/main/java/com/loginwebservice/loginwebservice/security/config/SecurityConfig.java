@@ -16,11 +16,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests((authorize)-> authorize
-                        .requestMatchers("/content","/").authenticated()
+                .csrf((csrf) -> csrf
+                        .ignoringRequestMatchers("/logout","/login")
                 )
                 .authorizeHttpRequests((authorize)-> authorize
-                        .requestMatchers("/login","/users/join","/profile","/logout").permitAll()
+                        .requestMatchers(
+                                "/login/**", "/users/join",
+                                "/profile","/logout/**",
+                                "/error","/css/**"
+                        )
+                        .permitAll()
+                )
+                .authorizeHttpRequests((authorize)-> authorize
+                        .anyRequest().authenticated()
                 )
                 .formLogin(
                         (login)-> login
@@ -36,6 +44,7 @@ public class SecurityConfig {
                 .logout((logout)->logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
+                        .deleteCookies()
                 )
                 .build();
     }
