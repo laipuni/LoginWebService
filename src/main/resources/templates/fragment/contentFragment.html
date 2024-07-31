@@ -45,11 +45,13 @@
     $(document).on('submit','form', (event) => {
         event.preventDefault()
         const content = $('#content').val();
-        const csrfToken = $("#csrfTokenInput").val();
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+        alert("전송=" + token + ", " + header)
         $.ajax({
             url:'/content',
             type:'post',
-            headers:{"X-CSRFToken":csrfToken},
+            headers:{header : token},
             contentType:'application/json',
             data:JSON.stringify(content)
         })
@@ -66,6 +68,7 @@
             })
             .fail((error) => {
                 console.log("fail" + JSON.stringify(error.responseJSON))
+                alert("알 수 없는 에러가 발생했습니다.")
                 $("#inputError").text(error.responseJSON.message)
             })
     })
