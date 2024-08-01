@@ -64,7 +64,7 @@ class ContentServiceTest extends IntegrationTest {
                 .containsExactly(expectedName,expectedEmail);
     }
 
-    @DisplayName("유저가 존재 하지않는 경우 에러가 발생한다.")
+    @DisplayName("컨텐츠를 등록할 때, 등록되지 않은 유저일 경우 에러가 발생한다.")
     @Test
     void saveWithNotExistUser(){
         //given
