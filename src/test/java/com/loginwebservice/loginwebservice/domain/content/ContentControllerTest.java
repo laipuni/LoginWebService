@@ -86,7 +86,7 @@ class ContentControllerTest {
 
     }
 
-    @DisplayName("내용 등록 Api")
+    @DisplayName("내용을 받아 컨텐츠를 등록하고 결과를 반환한다.")
     @WithMockUser()
     @Test
     void homeInput() throws Exception {
@@ -127,7 +127,7 @@ class ContentControllerTest {
                 .andExpect(jsonPath("$.data").exists());
     }
 
-    @DisplayName("빈 내용이 요청으로 올 경우 에러가 발생한다.")
+    @DisplayName("컨텐츠를 등록할 때, 내용이 없을 경우 에러가 발생한다.")
     @WithMockUser()
     @Test
     void homeInputWithBlankContents() throws Exception {
