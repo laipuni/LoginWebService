@@ -24,7 +24,16 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String userName;
+
+    @Column(nullable = false,unique = true)
+    private String loginId;
+
     @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false,unique = true)
     private String email;
 
     private String picture;
@@ -38,19 +47,41 @@ public class User extends BaseEntity {
     private Role role;
 
     @Builder
-    private User(final String name, final String email, final String picture, final Role role) {
+    private User(
+                 final String name,
+                 final String email,
+                 final String picture,
+                 final Role role,
+                 final String userName,
+                 final String loginId,
+                 final String password
+            ) {
         this.name = name;
         this.email = email;
         this.picture = picture;
         this.role = role;
+        this.userName = userName;
+        this.loginId = loginId;
+        this.password = password;
     }
 
-    public static User of(final String name, final String email, final String picture, final Role role){
+    public static User of(
+            final String name,
+            final String email,
+            final String picture,
+            final Role role,
+            final String userName,
+            final String loginId,
+            final String password
+    ){
         return User.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
                 .role(role)
+                .userName(userName)
+                .loginId(loginId)
+                .password(password)
                 .build();
     }
 
