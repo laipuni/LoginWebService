@@ -24,13 +24,13 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String userName;
 
-    @Column(nullable = false,unique = true)
+    @Column(unique = true)
     private String loginId;
 
-    @Column(nullable = false)
+    @Column()
     private String password;
 
     @Column(nullable = false,unique = true)
