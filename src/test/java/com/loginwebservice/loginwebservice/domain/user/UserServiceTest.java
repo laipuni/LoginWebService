@@ -1,19 +1,18 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
+import com.loginwebservice.loginwebservice.IntegrationTest;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-class UserServiceTest {
+class UserServiceTest extends IntegrationTest {
 
     @Autowired
     UserRepository userRepository;
@@ -47,9 +46,9 @@ class UserServiceTest {
         List<User> users = userRepository.findAll();
         //then
         assertThat(users).hasSize(1)
-                .extracting("loginId","password","email")
+                .extracting("name","userName","loginId","password","email")
                 .containsExactly(
-                        tuple(expectedLoginId,expectedPassword,expectedEmail)
+                        tuple(expectedName,expectedUserName,expectedLoginId,expectedPassword,expectedEmail)
                 );
     }
 
