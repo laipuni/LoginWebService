@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping("/users/join")
     public String join(
-            @Valid @ModelAttribute("user") UserAddRequest request,
+            @Valid @ModelAttribute(name = "user") UserAddRequest request,
             BindingResult bindingResult,
             Model model
     ){
@@ -40,6 +40,11 @@ public class UserController {
             return "/user/userAddForm";
         }
 
-        return "redirect:/login";
+        return "redirect:/users/join/success";
+    }
+
+    @GetMapping("/users/join/success")
+    public String registerSuccess(){
+        return "/user/registerSuccess";
     }
 }
