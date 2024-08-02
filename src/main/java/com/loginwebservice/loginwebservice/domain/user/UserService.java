@@ -18,7 +18,7 @@ public class UserService {
                 request.getName(),
                 request.getEmail(),
                 null,
-                Role.GUEST,
+                Role.USER,
                 request.getUserName(),
                 request.getLoginId(),
                 request.getPassword()
