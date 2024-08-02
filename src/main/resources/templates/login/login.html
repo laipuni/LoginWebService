@@ -6,49 +6,51 @@
     <meta charset="UTF-8">
     <title>로그인</title>
 </head>
-<body class="d-flex align-items-center py-5 bg-body-tertiary">
+<body class="d-flex align-items-center py-5">
 <main class="form-signin w-25 m-auto">
-    <form>
-        <h2 class="text-center mb-4">로그인</h2>
-        <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" name="loginId" placeholder="name@example.com">
-            <label for="floatingInput">아이디</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
-            <label for="floatingPassword">비밀번호</label>
-        </div>
+        <div class="p-4 text-center bg-body-tertiary rounded-4">
+            <form>
+                <h2 class="text-center mb-4">로그인</h2>
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="floatingInput" name="loginId" placeholder="name@example.com">
+                    <label for="floatingInput">아이디</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+                    <label for="floatingPassword">비밀번호</label>
+                </div>
 
-        <div class="form-check text-start my-3">
-            <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-                로그인 상태 유지
-            </label>
-        </div>
-        <nav aria-label='breadcrumb' class="d-flex justify-content-center mb-1">
-            <ol class='breadcrumb'>
-                <li class='breadcrumb-item'>
-                    <a class='link-light' href="/users/join" type="link">
-                        회원가입
-                    </a>
-                </li>
-                <li class='breadcrumb-item' >
-                    <a class='link-light' href="" type="link">
-                        아이디 찾기
-                    </a>
-                </li>
-                <li class='breadcrumb-item'>
-                    <a class='link-light' href="" type="link">
-                        비밀번호 찾기
-                    </a>
-                </li>
-            </ol>
-        </nav>
+                <div class="form-check text-start my-3">
+                    <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        로그인 상태 유지
+                    </label>
+                </div>
+                <nav aria-label='breadcrumb' class="d-flex justify-content-center mb-1">
+                    <ol class='breadcrumb'>
+                        <li class='breadcrumb-item'>
+                            <a class='link-light' href="/users/join" type="link">
+                                회원가입
+                            </a>
+                        </li>
+                        <li class='breadcrumb-item' >
+                            <a class='link-light' href="" type="link">
+                                아이디 찾기
+                            </a>
+                        </li>
+                        <li class='breadcrumb-item'>
+                            <a class='link-light' href="" type="link">
+                                비밀번호 찾기
+                            </a>
+                        </li>
+                    </ol>
+                </nav>
 
-        <a class="btn btn-primary w-100 py-2 mb-1" th:href="@{/oauth2/authorization/google}" type="button">Google로 로그인</a>
-        <a class="btn btn-primary w-100 py-2 mb-1" th:href="@{/oauth2/authorization/naver}" type="button">Naver로 로그인</a>
-        <a class="btn btn-primary w-100 py-2 mb-1" type="submit">로그인</a>
-    </form>
+                <a class="btn btn-primary w-100 py-2 mb-1" th:href="@{/oauth2/authorization/google}" type="button">Google로 로그인</a>
+                <a class="btn btn-primary w-100 py-2 mb-1" th:href="@{/oauth2/authorization/naver}" type="button">Naver로 로그인</a>
+                <a class="btn btn-primary w-100 py-2 mb-1" type="submit">로그인</a>
+            </form>
+        </div>
 </main>
 </body>
 </html>
