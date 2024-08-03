@@ -29,4 +29,12 @@ public class UserService {
         User result = userRepository.save(user);
     }
 
+    public boolean isExistSameUserNameUser(final String userName){
+        return userRepository.existsUserByUserName(userName);
+    }
+
+    public boolean isExistSameLoginIdUSer(final String loginId){
+        return userRepository.existsUserByLoginId(loginId);
+    }
+
 }
