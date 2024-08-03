@@ -1,5 +1,6 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
+import com.loginwebservice.loginwebservice.domain.PasswordEncodeService;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncodeService encodeService;
 
     @Transactional
     public void join(UserAddRequest request){
+        String encodedPassword = encodeService.encodePassword(request.getPassword());
         User user = User.of(
                 request.getName(),
                 request.getEmail(),
@@ -21,7 +24,7 @@ public class UserService {
                 Role.USER,
                 request.getUserName(),
                 request.getLoginId(),
-                request.getPassword()
+                encodedPassword
         );
         User result = userRepository.save(user);
     }
