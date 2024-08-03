@@ -28,7 +28,7 @@ class UserApiControllerTest {
     @MockBean
     UserService userService;
 
-    @DisplayName("")
+    @DisplayName("중복 체크할 아이디를 받아 중복된 아이디가 존재하는지 반환한다.")
     @Test
     void isExistSameLoginIdUser() throws Exception {
         //given
