@@ -48,4 +48,24 @@ class UserApiControllerTest {
                 .andExpect(jsonPath("$.data").value(Boolean.TRUE));
     }
 
+    @DisplayName("중복 체크할 닉네임을 받아 중복된 닉네임이 존재하는지 반환한다.")
+    @Test
+    void isExistSameUserName() throws Exception {
+        //given
+        String userName = "닉네임";
+
+        Mockito.when(userService.isExistSameUserName(userName)).thenReturn(Boolean.TRUE);
+
+        //when
+        //then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/join/check-user-name?userName=" + userName)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.data").value(Boolean.TRUE));
+    }
+
 }
