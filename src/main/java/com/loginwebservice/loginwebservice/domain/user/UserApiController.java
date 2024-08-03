@@ -4,7 +4,7 @@ import com.loginwebservice.loginwebservice.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,8 +13,8 @@ public class UserApiController {
 
     private final UserService userService;
 
-    @GetMapping("/users/{loginId}")
-    public ApiResponse<Boolean> isExistSameLoginIdUser(@PathVariable String loginId){
+    @GetMapping("/users/join/check-login-id")
+    public ApiResponse<Boolean> isExistSameLoginIdUser(@RequestParam("loginId") String loginId){
         boolean result = userService.isExistSameLoginIdUSer(loginId);
         return ApiResponse.of(HttpStatus.OK,result);
     }
