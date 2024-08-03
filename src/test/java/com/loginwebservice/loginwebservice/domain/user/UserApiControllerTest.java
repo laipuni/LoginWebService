@@ -38,7 +38,9 @@ class UserApiControllerTest {
 
         //when
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + loginId))
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/users/join/check-login-id?loginId=" + loginId)
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("OK"))
