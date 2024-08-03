@@ -29,7 +29,7 @@ public class UserService {
         User result = userRepository.save(user);
     }
 
-    public boolean isExistSameUserNameUser(final String userName){
+    public boolean isExistSameUserName(final String userName){
         return userRepository.existsUserByUserName(userName);
     }
 
