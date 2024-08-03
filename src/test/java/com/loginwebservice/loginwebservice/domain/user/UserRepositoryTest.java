@@ -61,5 +61,26 @@ class UserRepositoryTest extends IntegrationTest {
         assertThat(result).isTrue();
     }
 
+    @DisplayName("주어진 아이디와 같은 유저가 존재하는지 확인한다.")
+    @Test
+    void existsUserByLoginId(){
+        //given
+        String duplicateLoginId = "중복된 아이디";
+        User user = User.builder()
+                .name("이름")
+                .userName("중복된 닉네임")
+                .loginId(duplicateLoginId)
+                .role(Role.USER)
+                .password("비밀번호")
+                .email("email@gmail.com")
+                .build();
+        userRepository.save(user);
+
+        //when
+        boolean result = userRepository.existsUserByLoginId(duplicateLoginId);
+
+        //then
+        assertThat(result).isTrue();
+    }
 
 }
