@@ -19,4 +19,11 @@ public class UserApiController {
         return ApiResponse.of(HttpStatus.OK,result);
     }
 
+    @GetMapping("/users/join/check-user-name")
+    public ApiResponse<Boolean> isExistSameUserName(@RequestParam("userName") String userName){
+        boolean result = userService.isExistSameUserName(userName);
+        return ApiResponse.of(HttpStatus.OK,result);
+    }
+
+
 }
