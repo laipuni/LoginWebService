@@ -39,4 +39,27 @@ class UserRepositoryTest extends IntegrationTest {
                 .containsExactly(expectedName,expectedEmail);
     }
 
+    @DisplayName("주어진 닉네임과 같은 유저가 존재하는지 확인한다.")
+    @Test
+    void existsUserByUserName(){
+        //given
+        String duplicateUserName = "중복된 닉네임";
+        User user = User.builder()
+                .name("이름")
+                .userName(duplicateUserName)
+                .loginId("아이디")
+                .role(Role.USER)
+                .password("비밀번호")
+                .email("email@gmail.com")
+                .build();
+        userRepository.save(user);
+
+        //when
+        boolean result = userRepository.existsUserByUserName(duplicateUserName);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+
 }
