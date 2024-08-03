@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ class UserServiceTest extends IntegrationTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void tearUp(){
@@ -46,10 +50,11 @@ class UserServiceTest extends IntegrationTest {
         List<User> users = userRepository.findAll();
         //then
         assertThat(users).hasSize(1)
-                .extracting("name","userName","loginId","password","email")
+                .extracting("name","userName","loginId","email")
                 .containsExactly(
-                        tuple(expectedName,expectedUserName,expectedLoginId,expectedPassword,expectedEmail)
+                        tuple(expectedName,expectedUserName,expectedLoginId,expectedEmail)
                 );
+        assertThat(passwordEncoder.matches(expectedPassword,users.get(0).getPassword())).isTrue();
     }
 
 
