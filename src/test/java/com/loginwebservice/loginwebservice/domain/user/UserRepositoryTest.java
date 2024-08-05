@@ -83,4 +83,25 @@ class UserRepositoryTest extends IntegrationTest {
         assertThat(result).isTrue();
     }
 
+    @DisplayName("주어진 아이디와 같은 유저가 존재하는지 확인한다.")
+    @Test
+    void findUserByLoginId(){
+        //given
+        String expectedLoginId = "아이디";
+        User user = User.builder()
+                .name("이름")
+                .userName("닉네임")
+                .loginId(expectedLoginId)
+                .role(Role.USER)
+                .password("비밀번호")
+                .email("email@gmail.com")
+                .build();
+        userRepository.save(user);
+
+        //when
+        User findUser = userRepository.findUserByLoginId(expectedLoginId).get();
+
+        //then
+        assertThat(findUser.getLoginId()).isEqualTo(expectedLoginId);
+    }
 }
