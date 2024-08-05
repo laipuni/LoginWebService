@@ -1,5 +1,8 @@
 package com.loginwebservice.loginwebservice.security.config;
 
+import com.loginwebservice.loginwebservice.security.formLogin.FormAuthenticationProvider;
+import com.loginwebservice.loginwebservice.security.formLogin.FormLoginFailureHandler;
+import com.loginwebservice.loginwebservice.security.formLogin.FormLoginSuccessHandler;
 import com.loginwebservice.loginwebservice.security.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +15,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-
+    private final FormAuthenticationProvider formAuthenticationProvider;
+    private final FormLoginFailureHandler formLoginFailureHandler;
+    private final FormLoginSuccessHandler formLoginSuccessHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers("/logout","/login")
+                        .ignoringRequestMatchers("/logout")
                 )
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers(
@@ -35,7 +40,10 @@ public class SecurityConfig {
                 .formLogin(
                         (login)-> login
                                 .loginPage("/login")
-                                .successForwardUrl("/")
+                                .usernameParameter("loginId")
+                                .passwordParameter("password")
+                                .successHandler(formLoginSuccessHandler)
+                                .failureHandler(formLoginFailureHandler)
                 )
                 .oauth2Login((oauth)->oauth
                         .loginPage("/login")
@@ -48,6 +56,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login")
                         .deleteCookies()
                 )
+                .authenticationProvider(formAuthenticationProvider)
                 .build();
     }
 
