@@ -1,6 +1,6 @@
 package com.loginwebservice.loginwebservice.security.resolver.loginUserProvider;
 
-import com.loginwebservice.loginwebservice.security.domain.SecurityUser;
+import com.loginwebservice.loginwebservice.security.formLogin.domain.SecurityUser;
 import com.loginwebservice.loginwebservice.security.resolver.dto.LoginUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
