@@ -26,7 +26,7 @@ public class UserService {
                 request.getLoginId(),
                 encodedPassword
         );
-        User result = userRepository.save(user);
+        userRepository.save(user);
     }
 
     public boolean isExistSameUserName(final String userName){
