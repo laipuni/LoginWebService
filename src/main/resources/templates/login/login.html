@@ -9,10 +9,12 @@
 <body class="d-flex align-items-center py-5">
 <main class="form-signin w-25 m-auto">
         <div class="p-4 text-center bg-body-tertiary rounded-4">
-            <form>
+            <form action="/login" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <h2 class="text-center mb-4">로그인</h2>
+                <div style="color: #dc3545" th:text="${errorMessage}"></div>
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingInput" name="loginId" placeholder="name@example.com">
+                    <input type="text" class="form-control" id="floatingInput" name="loginId" placeholder="name@example.com">
                     <label for="floatingInput">아이디</label>
                 </div>
                 <div class="form-floating">
@@ -48,7 +50,7 @@
 
                 <a class="btn btn-primary w-100 py-2 mb-1" th:href="@{/oauth2/authorization/google}" type="button">Google로 로그인</a>
                 <a class="btn btn-primary w-100 py-2 mb-1" th:href="@{/oauth2/authorization/naver}" type="button">Naver로 로그인</a>
-                <a class="btn btn-primary w-100 py-2 mb-1" type="submit">로그인</a>
+                <button class="btn btn-primary w-100 py-2 mb-1" type="submit">로그인</button>
             </form>
         </div>
 </main>
