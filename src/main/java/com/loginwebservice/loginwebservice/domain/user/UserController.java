@@ -45,6 +45,6 @@ public class UserController {
 
     @GetMapping("/users/join/success")
     public String registerSuccess(){
-        return "/user/registerSuccess";
+        return "user/registerSuccess";
     }
 }
