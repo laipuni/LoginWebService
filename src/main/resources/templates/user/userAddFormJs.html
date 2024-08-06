@@ -196,7 +196,6 @@
         ]
         let isAllValid = true;
         $.each(inputElementIdArray, (index,element) => {
-            alert(element);
             $("#" + element).trigger('blur')
             if($('#' + element).hasClass('is-invalid')){
                 isAllValid = false;
@@ -212,6 +211,6 @@
     function canFormAction(){
         return checkDuplicateUser() && checkInValidAllInput();
     }
-</th:fragscript>
+</script>
 </body>
 </html>
