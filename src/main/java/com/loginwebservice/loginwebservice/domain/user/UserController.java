@@ -29,7 +29,7 @@ public class UserController {
             Model model
     ){
         if(bindingResult.hasErrors()){
-            return "/user/userAddForm";
+            return "user/userAddForm";
         }
 
         //중복된 유저가 존재해 에러가 발생한 경우
@@ -37,7 +37,7 @@ public class UserController {
             userService.join(request);
         } catch (DataIntegrityViolationException exception){
             model.addAttribute("globalError","기입된 정보 중에 일치하는 유저가 존재합니다.");
-            return "/user/userAddForm";
+            return "user/userAddForm";
         }
 
         return "redirect:/users/join/success";
