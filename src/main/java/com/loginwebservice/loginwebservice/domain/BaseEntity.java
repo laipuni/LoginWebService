@@ -16,9 +16,9 @@ public abstract class BaseEntity extends BaseTimeEntity{
 
     @CreatedBy
     @Column(updatable = false)
-    private String createBy;
+    private Long createBy;
 
     @LastModifiedBy
-    private String updateBy;
+    private Long updateBy;
 
 }
