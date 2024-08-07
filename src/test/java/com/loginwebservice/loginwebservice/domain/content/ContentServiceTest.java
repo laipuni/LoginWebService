@@ -77,7 +77,7 @@ class ContentServiceTest extends IntegrationTest {
         //then
         assertThatThrownBy(() -> contentService.save(request))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageMatching("해당 유저는 존재하지 않습니다.");
+                .hasMessageMatching("해당 유저는 등록되지 않았습니다.");
     }
 
 }
