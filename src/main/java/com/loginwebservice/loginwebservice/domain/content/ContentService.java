@@ -20,7 +20,7 @@ public class ContentService {
     @Transactional
     public ContentAddResponse save(final ContentAddServiceRequest request) {
         User user = userRepository.findUserByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 등록되지 않았습니다."));
         Content content = contentRepository.save(Content.of(user,request.getContent()));
         return ContentAddResponse.of(content);
     }
