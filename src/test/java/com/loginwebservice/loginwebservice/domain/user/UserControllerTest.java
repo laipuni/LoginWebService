@@ -86,7 +86,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"));
+                .andExpect(view().name("user/userAddForm"));
     }
 
     @DisplayName("회원가입 요청을 받았을 때, 아이디에 특수 기호가 있을 경우 에러가 발생한다.")
@@ -113,7 +113,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
     }
@@ -142,7 +142,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -173,7 +173,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -203,7 +203,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -234,7 +234,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -265,7 +265,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -297,7 +297,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -329,7 +329,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -361,7 +361,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -393,7 +393,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
     }
@@ -424,7 +424,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
@@ -458,7 +458,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("/user/userAddForm"))
+                .andExpect(view().name("user/userAddForm"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasErrors("user"));
 
