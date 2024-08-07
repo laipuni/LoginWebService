@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 public class SecurityUser extends User {
 
+    private Long userSeq;
     private String email;
     private String picture;
 
@@ -17,6 +18,7 @@ public class SecurityUser extends User {
         super(user.getLoginId(), user.getPassword(), createAuthority(List.of(user.getRole())));
         this.email = user.getEmail();
         this.picture = user.getPicture();
+        this.userSeq = user.getId();
     }
 
     private static List<SimpleGrantedAuthority> createAuthority(List<Role> roleList){
