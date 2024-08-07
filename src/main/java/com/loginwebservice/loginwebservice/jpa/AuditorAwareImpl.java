@@ -21,7 +21,7 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
         }
 
         if(!authentication.isAuthenticated()){
-            log.debug("");
+            log.debug("Not Authentication");
             return null;
         }
 
