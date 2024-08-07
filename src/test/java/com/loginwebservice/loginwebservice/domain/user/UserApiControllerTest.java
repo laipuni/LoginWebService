@@ -39,7 +39,7 @@ class UserApiControllerTest {
         //when
         //then
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/users/join/check-login-id?loginId=" + loginId)
+                MockMvcRequestBuilders.get("/api/users/join/check-login-id?loginId=" + loginId)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -59,7 +59,7 @@ class UserApiControllerTest {
         //when
         //then
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/users/join/check-user-name?userName=" + userName)
+                        MockMvcRequestBuilders.get("/api/users/join/check-user-name?userName=" + userName)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

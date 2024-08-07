@@ -138,7 +138,7 @@
             return
         }
 
-        $.get("/users/join/check-login-id?loginId=" + loginId)
+        $.get("/api/users/join/check-login-id?loginId=" + loginId)
             .done((result) => {
                 if(!result.data){
                     //가입할 아이디와 중복된 유저가 존재하지 않는 경우
@@ -167,7 +167,7 @@
             return
         }
 
-        $.get("/users/join/check-user-name?userName=" + userName)
+        $.get("/api/users/join/check-user-name?userName=" + userName)
             .done((result) => {
                 if(!result.data){
                     //가입할 닉네임과 중복된 유저가 존재하지 않는 경우

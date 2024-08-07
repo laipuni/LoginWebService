@@ -29,8 +29,8 @@ public class SecurityConfig {
                                 "/login/**", "/users/join",
                                 "/profile","/logout/**",
                                 "/error/**","/css/**",
-                                "/users/join/success","/users/join/check-login-id",
-                                "/users/join/check-user-name"
+                                "/users/join/success","/api/users/join/check-login-id",
+                                "/api/users/join/check-user-name"
                         )
                         .permitAll()
                 )
