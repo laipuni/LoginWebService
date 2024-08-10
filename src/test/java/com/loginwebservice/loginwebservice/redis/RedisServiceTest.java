@@ -58,9 +58,9 @@ class RedisServiceTest extends IntegrationTest {
         operations.set(expectedKey,expectedValue);
         //when
         redisService.setDataExpire(expectedKey,expectedKey,duration);
-        Thread.sleep(1000 * duration);
 
         //then
+        Thread.sleep(1100 * duration);
         Boolean result = redisTemplate.hasKey(expectedKey);
         assertThat(result).isFalse();
     }
