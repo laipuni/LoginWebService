@@ -30,7 +30,8 @@ public class SecurityConfig {
                                 "/profile","/logout/**",
                                 "/error/**","/css/**",
                                 "/users/join/success","/api/users/join/check-login-id",
-                                "/api/users/join/check-user-name"
+                                "/api/users/join/check-user-name","/api/users/send-id-auth-code",
+                                "/api/users/valid-id-auth-code", "/users/help-id"
                         )
                         .permitAll()
                 )
