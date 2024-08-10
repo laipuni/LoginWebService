@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script th:fragment="userIdHelpJs()" th:inline="javascript">
+    $("#getAuthCodeBtn").on('click',() =>{
+        const name = $("#name").val()
+        if(name===""){
+            alert("이름을 입력해주세요.")
+            return
+        }
+
+        const email = $("#email").val()
+        if(email===""){
+            alert("이메일 주소를 정확하게 입력해주세요.")
+            return
+        }
+
+        const token = $("meta[name='_csrf']").attr("content");
+        alert("인증요청을 보냈습니다. 만약 인증코드가 오지 않으면 입력하신 정보가 회원정보가 일치하는지 확인해주세요.")
+        $.ajax({
+            url:"/api/users/send-id-auth-code",
+            type: 'post',
+            contentType: 'application/json',
+            headers:{"X-CSRF-TOKEN": token},
+            dataType: 'json',
+            data: JSON.stringify({
+                name:name,
+                email:email
+            })
+        })
+            .fail((error)=>{
+                console.error("실패 = " + JSON.stringify(error))
+            })
+    })
+
+    $("#authBtn").on('click',() =>{
+        const name = $("#name").val()
+        if(name===""){
+            alert("이름을 입력해주세요.")
+            return
+        }
+
+        const email = $("#email").val()
+        if(email===""){
+            alert("이메일 주소를 정확하게 입력해주세요.")
+            return
+        }
+        const authCode = $("#authCode").val();
+        if(authCode===""){
+            alert("인증 코드를 입력해주세요.")
+            return
+        }
+
+        const token = $("meta[name='_csrf']").attr("content");
+        $.ajax({
+            url:"/api/users/valid-id-auth-code",
+            type: 'post',
+            contentType: 'application/json',
+            headers:{"X-CSRF-TOKEN": token},
+            dataType: 'json',
+            data: JSON.stringify({
+                name:name,
+                email:email,
+                authCode:authCode
+            })
+        })
+            .done((result)=>{
+                if(result.status.match("OK")){
+                    alert(result.data.loginId)
+                    $(".authFormGroup").empty().append(`
+                      <div class="text-center">
+                        <span><b>조회된 아이디 : </b></span>
+                        <span>${result.data.loginId}</span>
+                      </div>
+                      <div class="text-center">
+                        <a href="/login" class="btn btn-secondary">로그인 화면으로가기</a>
+                        <a href="#" class="btn btn-primary">비밀번호 찾으러가기</a>
+                      </div>
+                  `)
+                }
+            })
+            .fail((error)=>{
+                console.error(JSON.stringify(error))
+                $("#globalErrorDiv").empty().append(`
+                    <p style="color: #dc3545">${error.message}</p>
+                `)
+            })
+    })
+</script>
+</body>
+</html>
