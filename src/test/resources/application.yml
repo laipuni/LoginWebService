@@ -22,6 +22,22 @@ spring:
             client-secret: test
             scope: email, profile
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@gmail.com
+    password: test
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          auth: true
+          authExpireTime: 1800 # 1800초 = 5분
+          starttls:
+            enable: true
+            required: true
 
   data:
     redis:
