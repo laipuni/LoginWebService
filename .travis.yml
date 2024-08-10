@@ -10,6 +10,7 @@ cache:
   - "$HOME/.gradle"
 before_install:
   - redis-server
+  - sysctl vm.overcommit_memory=1
   - openssl aes-256-cbc -K $encrypted_fed9c5fd79dc_key -iv $encrypted_fed9c5fd79dc_iv
     -in ./src/main/resources/application-yml.tar.enc -out application-yml.tar -d
   - chmod +x gradlew
