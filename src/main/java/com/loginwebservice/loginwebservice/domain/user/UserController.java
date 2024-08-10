@@ -47,4 +47,9 @@ public class UserController {
     public String registerSuccess(){
         return "user/registerSuccess";
     }
+
+    @GetMapping("/users/help-id")
+    public String findIdForm(){
+        return "user/userIdHelpForm";
+    }
 }
