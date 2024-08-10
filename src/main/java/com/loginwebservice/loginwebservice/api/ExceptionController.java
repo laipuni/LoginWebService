@@ -21,4 +21,15 @@ public class ExceptionController {
         );
     }
 
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse<Object> IllegalArgumentException(IllegalArgumentException exception){
+        return ApiErrorResponse.of(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                null
+        );
+    }
+
+
 }
