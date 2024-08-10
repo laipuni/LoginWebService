@@ -44,6 +44,9 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //Email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     //mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
 
