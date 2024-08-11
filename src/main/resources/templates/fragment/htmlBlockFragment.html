@@ -8,7 +8,7 @@
 
 <script th:fragment="f12Block()" th:inline="javascript">
     // F12 버튼 방지
-    $(document).ready(function(){
+    $(document).on('ready',() => {
         $(document).bind('keydown',function(e){
             if ( e.keyCode == 123 /* F12 */) {
                 e.preventDefault();
