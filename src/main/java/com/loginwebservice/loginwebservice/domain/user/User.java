@@ -30,7 +30,7 @@ public class User extends BaseEntity {
     @Column(length = 12,unique = true)
     private String loginId;
 
-    @Column(length = 15)
+    @Column()
     private String password;
 
     @Column(nullable = false,unique = true)
