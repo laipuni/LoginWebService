@@ -22,7 +22,7 @@
             <div class="p-5 text-center bg-body-tertiary rounded-3">
                 <div class="container">
                     <h2 class="text-center mb-4">회원 가입</h2>
-                    <div th:if="${globalError}" class="input-danger" th:errorclass="is-invalid" th:text="${globalError}"></div>
+                    <div th:if="${globalError}" class="input-danger" th:text="${globalError}"></div>
                     <form action="" th:object="${user}" method="post" onsubmit="return canFormAction();">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
