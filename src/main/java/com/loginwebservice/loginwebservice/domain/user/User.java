@@ -27,10 +27,10 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String userName;
 
-    @Column(unique = true)
+    @Column(length = 12,unique = true)
     private String loginId;
 
-    @Column()
+    @Column(length = 15)
     private String password;
 
     @Column(nullable = false,unique = true)
