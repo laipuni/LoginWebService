@@ -10,7 +10,7 @@
     // F12 버튼 방지
     $(document).on('ready',() => {
         $(document).bind('keydown',function(e){
-            if ( e.keyCode == 123 /* F12 */) {
+            if ( e.keyCode === 123 /* F12 */) {
                 e.preventDefault();
                 e.returnValue = false;
             }
@@ -23,7 +23,7 @@
     document.onmousedown=disableclick;
 
     function disableclick(event){
-        if (event.button==2) {
+        if (event.button === 2) {
             return false;
         }
     }
