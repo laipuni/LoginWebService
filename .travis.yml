@@ -11,7 +11,7 @@ cache:
 before_install:
   - sudo sysctl -w net.core.somaxconn=4096
   - sudo sysctl -w vm.overcommit_memory=1
-  - redis-server /etc/redis/redis.conf
+  - sudo redis-server /etc/redis/redis.conf
   - chmod +x gradlew
 script: "./gradlew clean build"
 before_deploy:
