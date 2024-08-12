@@ -44,7 +44,7 @@
 
     //적절한 비밀번호 패턴 확인
     function isCorrectPassword(password){
-        const regEp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/
+        const regEp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*])[A-Za-z\d~!@#$%^&*]{8,15}$/
         return regEp.test(password);
     }
     $("#password").bind('blur',() =>{
