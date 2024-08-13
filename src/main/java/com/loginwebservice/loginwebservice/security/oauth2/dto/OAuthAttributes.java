@@ -13,6 +13,7 @@ public class OAuthAttributes {
 
     private Map<String,Object> attributes;
     private String attributesNameKey;
+    private String userName;
     private String name;
     private String email;
     private String picture;
@@ -22,12 +23,14 @@ public class OAuthAttributes {
             final Map<String, Object> attributes,
             final String attributesNameKey,
             final String name,
+            final String userName,
             final String email,
             final String picture
     ) {
         this.attributes = attributes;
         this.attributesNameKey = attributesNameKey;
         this.name = name;
+        this.userName = userName;
         this.email = email;
         this.picture = picture;
     }
@@ -47,6 +50,7 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .attributes(attributes)
                 .attributesNameKey(attributeName)
+                .userName((String) attributes.get("name"))
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .picture((String) attributes.get("picture"))
@@ -58,6 +62,7 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .attributes(response)
                 .attributesNameKey(attributesName)
+                .userName((String) response.get("nickname"))
                 .name((String) response.get("name"))
                 .email((String) response.get("email"))
                 .picture((String) response.get("profile_image"))
