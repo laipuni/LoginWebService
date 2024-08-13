@@ -89,8 +89,9 @@ public class User extends BaseEntity {
         return role.getKey();
     }
 
-    public User update(final String name, final String email, final String picture) {
+    public User update(final String userName,final String name, final String email, final String picture) {
         this.name = name;
+        this.userName = userName;
         this.email = email;
         this.picture = picture;
         return this;
