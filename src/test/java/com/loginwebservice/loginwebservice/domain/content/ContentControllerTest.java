@@ -97,7 +97,7 @@ class ContentControllerTest {
 
         LoginUser user = LoginUser.builder()
                 .email("email@gmail.com")
-                .name("라이푸니")
+                .userName("라이푸니")
                 .build();
 
         String data = objectMapper.writeValueAsString(request);
