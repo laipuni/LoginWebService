@@ -30,7 +30,7 @@ public class NaverLoginUserProvider implements AuthenticationLoginUserProvider{
         DefaultOAuth2User user = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = user.getAttributes();
         return LoginUser.of(
-                (String) attributes.get("name"),
+                (String) attributes.get("nickname"),
                 (String) attributes.get("email"),
                 (String) attributes.get("profile_image")
         );
