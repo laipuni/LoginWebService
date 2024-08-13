@@ -1,4 +1,4 @@
-package com.loginwebservice.loginwebservice.domain.user.req;
+package com.loginwebservice.loginwebservice.domain.user.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
