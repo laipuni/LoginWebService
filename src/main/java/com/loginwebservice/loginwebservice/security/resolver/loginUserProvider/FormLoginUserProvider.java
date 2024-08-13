@@ -19,7 +19,7 @@ public class FormLoginUserProvider implements AuthenticationLoginUserProvider{
         Object principal = authentication.getPrincipal();
         if(SecurityUser.class.isAssignableFrom(principal.getClass())){
             SecurityUser user = (SecurityUser) principal;
-            return LoginUser.of(user.getUsername(), user.getEmail(), user.getPicture());
+            return LoginUser.of(user.getNickName(), user.getEmail(), user.getPicture());
         } else {
             User user = (User) principal;
             return LoginUser.of(user.getUsername(), null,null);
