@@ -2,6 +2,7 @@ package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.Email.AuthCodeUtils;
 import com.loginwebservice.loginwebservice.Email.EmailService;
+import com.loginwebservice.loginwebservice.domain.user.response.SearchLoginIdResponse;
 import com.loginwebservice.loginwebservice.domain.user.response.UserIdVerifyAuthCodeResponse;
 import com.loginwebservice.loginwebservice.redis.RedisService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,9 @@ public class UserHelpService {
     @Value("${spring.mail.properties.mail.smtp.authExpireTime}")
     private long authExpireTime;
 
+    @Value("${spring.help.token.expireTime}")
+    private long tokenHelpExpireTime;
+
     private final RedisService redisService;
     private final EmailService emailService;
     private final UserRepository userRepository;
@@ -31,7 +35,7 @@ public class UserHelpService {
             redisService.deleteData(email);
         }
 
-        String title = "인증 번호입니다.";
+        String title = "[아이디] 인증 번호입니다.";
         String authCode = AuthCodeUtils.createAuthCode();
         redisService.setDataExpire(email,authCode, authExpireTime);
         emailService.sendEmail(email, authCode,title);
@@ -50,4 +54,32 @@ public class UserHelpService {
         redisService.deleteData(email);
         return response;
     }
+
+    public SearchLoginIdResponse searchLoginId(final String loginId, final String helpToken){
+        User user = userRepository.findUserByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+
+        redisService.setDataExpire(helpToken, user.getLoginId(), tokenHelpExpireTime);
+
+        return SearchLoginIdResponse.of(true,helpToken);
+    }
+
+    public void helpUserPassword(final String name,final String email){
+        //입력한 정보가 일치하지 않을 경우 예외 발생
+        if(!userRepository.existsUserByEmailAndName(email,name)){
+            throw new IllegalArgumentException("입력하신 정보가 일치하는 유저는 존재하지 않습니다.");
+        }
+
+        //이전 인증 코드가 남아있을 경우 삭제
+        if(!redisService.existData(email)){
+            redisService.deleteData(email);
+        }
+
+        String title = "[비밀번호] 인증 번호입니다.";
+        String authCode = AuthCodeUtils.createAuthCode();
+        redisService.setDataExpire(email,authCode, authExpireTime);
+        emailService.sendEmail(email, authCode,title);
+    }
+
+
 }
