@@ -38,9 +38,11 @@ class ContentServiceTest extends IntegrationTest {
     void save(){
         //given
         String expectedEmail = "email@gmail.com";
-        String expectedName = "laipuni";
+        String expectedName = "김사자";
+        String expectedUserName = "laipuni";
         User user = User.builder()
                 .name(expectedName)
+                .userName(expectedUserName)
                 .email(expectedEmail)
                 .role(Role.GUEST)
                 .build();
