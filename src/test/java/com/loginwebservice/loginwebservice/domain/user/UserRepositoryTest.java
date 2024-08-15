@@ -1,7 +1,8 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.IntegrationTest;
-import com.loginwebservice.loginwebservice.domain.user.response.UserIdVerifyAuthCodeResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdValidationResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.PasswordAuthCodeValidResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -148,7 +149,32 @@ class UserRepositoryTest extends IntegrationTest {
         userRepository.save(user);
 
         //when
-        UserIdVerifyAuthCodeResponse result = userRepository.findByNameAndEmail(expectedName, expectedMail).get();
+        LoginIdValidationResponse result = userRepository.findLoginIdValidationDtoBy(expectedName, expectedMail).get();
+
+        //then
+        assertThat(result.getLoginId()).isEqualTo(expectedLoginId);
+    }
+
+    @DisplayName("이름과 메일과 같은 유저의 아이디를 Dto에 담아 조회한다")
+    @Test
+    void findPasswordValidationDtoByNameAndEmail(){
+        //given
+        String expectedName = "김사자";
+        String expectedMail = "김사자씨메일@mail.com";
+        String expectedLoginId = "김사자씨아이디";
+
+        User user = User.builder()
+                .name(expectedName)
+                .loginId(expectedLoginId)
+                .password("password")
+                .email(expectedMail)
+                .picture(null)
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+
+        //when
+        PasswordAuthCodeValidResponse result = userRepository.findPasswordValidationDtoBy(expectedName, expectedMail).get();
 
         //then
         assertThat(result.getLoginId()).isEqualTo(expectedLoginId);
