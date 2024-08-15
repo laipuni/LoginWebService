@@ -15,12 +15,14 @@
                 .done((result)=>{
                     if(result.status.match("OK")){
                         viewPasswordAuth(result.data.token)
-                    } else{
-                        alert("해당 아이디는 존재하지 않는 계정입니다.")
                     }
                 })
                 .fail((error)=>{
-                    alert("일시적인 에러가 발생했습니다. 관리자에게 문의 해주시면 감사합니다.")
+                    if(error.responseJSON.status === "BAD_REQUEST"){
+                        alert(error.responseJSON.message)
+                    } else{
+                        alert("일시적인 에러가 발생했습니다. 관리자에게 문의 해주시면 감사합니다.")
+                    }
                     console.error(JSON.stringify(error))
                 })
         }
