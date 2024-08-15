@@ -2,7 +2,7 @@ package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.Email.EmailService;
 import com.loginwebservice.loginwebservice.IntegrationTest;
-import com.loginwebservice.loginwebservice.domain.user.response.SearchLoginIdResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class UserHelpServiceTest extends IntegrationTest {
 
     public static final String EXPECTED_EMAIL = "email@email.com";
+    public static final String TOKEN_HELP = "token_help";
 
     @Autowired
     UserRepository userRepository;
@@ -34,8 +37,12 @@ class UserHelpServiceTest extends IntegrationTest {
     @MockBean
     EmailService emailService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @BeforeEach
     void tearUp(){
+        redisTemplate.delete(TOKEN_HELP);
         redisTemplate.delete(EXPECTED_EMAIL);
         userRepository.deleteAllInBatch();
     }
@@ -67,14 +74,14 @@ class UserHelpServiceTest extends IntegrationTest {
         //when
         //then
         assertThatThrownBy(()->
-                userHelpService.verifyHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
+                userHelpService.validHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("인증 요청을 다시 요청해주십시오.");
 
     }
 
-    @DisplayName("아이디 찾기 인증 코드를 받았을 때, 아이디 찾기 인증 코드가 유효하지 않을 경우 에러가 발생한다.")
+    @DisplayName("아이디 찾기 인증 코드를 받았을 때, 아이디 찾기 인증 코드와 다를 경우 에러가 발생한다.")
     @Test
     void verifyHelpUserIdAuthCodeWithWrongAuthCode(){
         //given
@@ -87,7 +94,7 @@ class UserHelpServiceTest extends IntegrationTest {
         //when
         //then
         assertThatThrownBy(()->
-                userHelpService.verifyHelpUserIdAuthCode(wrongAuthCode,expectedName,expectedEmail)
+                userHelpService.validHelpUserIdAuthCode(wrongAuthCode,expectedName,expectedEmail)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("인증 코드를 잘못 작성하셨습니다. 입력한 정보가 맞는지 다시 확인해주세요.");
@@ -106,7 +113,7 @@ class UserHelpServiceTest extends IntegrationTest {
         //when
         //then
         assertThatThrownBy(()->
-                userHelpService.verifyHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
+                userHelpService.validHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("해당 정보와 일치하는 유저는 존재하지 않습니다.");
@@ -130,7 +137,7 @@ class UserHelpServiceTest extends IntegrationTest {
         String key = UUID.randomUUID().toString();
 
         //when
-        SearchLoginIdResponse searchLoginIdResponse = userHelpService.searchLoginId(findLoginId, key);
+        LoginIdSearchResponse searchLoginIdResponse = userHelpService.searchLoginId(findLoginId, key);
         String loginId = operations.get(searchLoginIdResponse.getToken());
 
         //then
@@ -199,9 +206,149 @@ class UserHelpServiceTest extends IntegrationTest {
         assertThatThrownBy(() ->userHelpService.helpUserPassword(expectedName,expectedEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("입력하신 정보가 일치하는 유저는 존재하지 않습니다.");
+    }
 
+    @DisplayName("비밀번호 인증 코드를 검증할 때, 인증 코드가 유효하지 않을 경우 에러가 발생한다.")
+    @Test
+    void verifyPasswordAuthCodeWithExpireAuthCode(){
+        //given
+        String expectedEmail = EXPECTED_EMAIL;
+        String expireAuthCode = "authcode";
+        String expectedName = "김사자";
+        //when
+        //then
+        assertThatThrownBy(()->
+                userHelpService.validPasswordAuthCode(expireAuthCode,expectedName,expectedEmail)
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("인증 요청을 다시 요청해주십시오.");
 
     }
 
+    @DisplayName("비밀번호 인증 코드를 검증할 때, 인증 코드가 틀렸을 경우 에러가 발생한다.")
+    @Test
+    void verifyPasswordAuthCodeWithWrongAuthCode(){
+        //given
+        String expectedEmail = EXPECTED_EMAIL;
+        String expectedAuthCode = "authcode";
+        String wrongAuthCode = "wrongauthcode";
+        String expectedName = "김사자";
+        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+        operations.set(expectedEmail,expectedAuthCode);
+        //when
+        //then
+        assertThatThrownBy(()->
+                userHelpService.validPasswordAuthCode(wrongAuthCode,expectedName,expectedEmail)
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("인증 코드를 잘못 작성하셨습니다. 입력한 정보가 맞는지 다시 확인해주세요.");
+    }
 
+    @DisplayName("새 비밀번호을 받아 유저의 비밀번호를 재설정한다")
+    @Test
+    void resetPassword(){
+        //given
+        String token = TOKEN_HELP;
+        String loginId = "loginId";
+        String oldPassword = passwordEncoder.encode("oldPassword");
+        String newPassword = "newPassword";
+
+        User user = User.builder()
+                .userName("김사자")
+                .password(oldPassword)
+                .email("email@email.com")
+                .picture(null)
+                .name("김사자")
+                .role(Role.USER)
+                .loginId(loginId)
+                .build();
+
+        userRepository.save(user);
+
+        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+        operations.set(token,loginId);
+
+        //when
+        userHelpService.resetPassword(token,newPassword);
+        List<User> users = userRepository.findAll();
+
+        //then
+        assertThat(
+                passwordEncoder.matches(newPassword,users.get(0).getPassword())
+        ).isTrue();
+    }
+
+    @DisplayName("새 비밀번호로 재설정할 때, 비밀번호 찾기 토큰(token_help)이 만료된 경우 에러가 발생한다.")
+    @Test
+    void resetPasswordWith(){
+        //given
+        String token = TOKEN_HELP;
+        String loginId = "loginId";
+        String oldPassword = passwordEncoder.encode("oldPassword");
+        String newPassword = "newPassword";
+
+        User user = User.builder()
+                .userName("김사자")
+                .password(oldPassword)
+                .email("email@email.com")
+                .picture(null)
+                .name("김사자")
+                .role(Role.USER)
+                .loginId(loginId)
+                .build();
+        userRepository.save(user);
+
+        //when
+        //then
+        assertThatThrownBy(() -> userHelpService.resetPassword(token,newPassword))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("비밀번호 세션이 만료됐습니다.");
+    }
+
+    @DisplayName("새 비밀번호로 재설정할 때, 유저가 존재하지 않거나 OAuth2방식 로그인 유저일 경우 에러가 발생한다.")
+    @Test
+    void resetPasswordWithNotFoundUser(){
+        //given
+        String token = TOKEN_HELP;
+        String loginId = "loginId";
+        String newPassword = "newPassword";
+
+        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+        operations.set(token,loginId);
+        //when
+        //then
+        assertThatThrownBy(() -> userHelpService.resetPassword(token,newPassword))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("해당 유저는 존재하지 않거나 변경할 수 없는 유저입니다.");
+    }
+
+    @DisplayName("새 비밀번호로 재설정할 때, 이전 비밀번호와 새 비밀번호가 같은 경우 에러가 발생한다.")
+    @Test
+    void resetPasswordWithSameOldPassword(){
+        //given
+        String token = TOKEN_HELP;
+        String loginId = "loginId";
+        String oldPassword = passwordEncoder.encode("oldPassword");
+        String sameOldPassword = "oldPassword";
+
+        User user = User.builder()
+                .userName("김사자")
+                .password(oldPassword)
+                .email("email@email.com")
+                .picture(null)
+                .name("김사자")
+                .role(Role.USER)
+                .loginId(loginId)
+                .build();
+        userRepository.save(user);
+
+        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+        operations.set(token,loginId);
+
+        //when
+        //then
+        assertThatThrownBy(() -> userHelpService.resetPassword(token,sameOldPassword))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("이전 비밀번호와 같습니다. 다른 비밀번호로 입력해주세요.");
+    }
 }
