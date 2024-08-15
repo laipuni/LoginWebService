@@ -70,7 +70,6 @@
         })
             .done((result)=>{
                 if(result.status.match("OK")){
-                    alert(result.data.loginId)
                     $(".authFormGroup").empty().append(`
                       <div class="text-center">
                         <span><b>조회된 아이디 : </b></span>
