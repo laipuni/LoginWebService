@@ -100,4 +100,11 @@ public class User extends BaseEntity {
     public void addContent(final Content content){
         this.contents.add(content);
     }
+
+    public void resetPassword(final String password) {
+        if(password == null){
+            throw new IllegalArgumentException("해당 비밀번호로 변경할 수 없습니다.");
+        }
+        this.password = password;
+    }
 }
