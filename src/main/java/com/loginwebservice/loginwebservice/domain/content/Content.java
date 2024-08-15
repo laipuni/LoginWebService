@@ -40,7 +40,7 @@ public class Content extends BaseEntity {
         Content content = Content.builder()
                 .contents(contents)
                 .picture(user.getPicture())
-                .userName(user.getName())
+                .userName(user.getUserName())
                 .user(user)
                 .build();
         user.addContent(content);
