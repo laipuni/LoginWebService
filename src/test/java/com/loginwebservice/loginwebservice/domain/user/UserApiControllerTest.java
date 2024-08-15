@@ -1,9 +1,13 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.loginwebservice.loginwebservice.domain.user.req.UserIdVerifyAuthCodeRequest;
-import com.loginwebservice.loginwebservice.domain.user.request.UserIdSendAuthCodeRequest;
-import com.loginwebservice.loginwebservice.domain.user.response.UserIdVerifyAuthCodeResponse;
+import com.loginwebservice.loginwebservice.domain.user.request.LoginIdAuthCodeValidRequest;
+import com.loginwebservice.loginwebservice.domain.user.request.LoginIdAuthCodeSendRequest;
+import com.loginwebservice.loginwebservice.domain.user.request.PasswordAuthCodeSendRequest;
+import com.loginwebservice.loginwebservice.domain.user.request.PasswordAuthCodeValidRequest;
+import com.loginwebservice.loginwebservice.domain.user.response.PasswordAuthCodeValidResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdValidationResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,6 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,12 +87,12 @@ class UserApiControllerTest {
 
     @DisplayName("아이디 인증 코드 요청시, 이름과 이메일이 적절하게 받았을 경우 결과를 반환한다.")
     @Test
-    void sendAuthCode() throws Exception {
+    void sendLoginIdAuthCode() throws Exception {
         //given
         String expectedName = "김사자";
         String expectedEmail = "email@email.com";
 
-        UserIdSendAuthCodeRequest request = UserIdSendAuthCodeRequest.builder()
+        LoginIdAuthCodeSendRequest request = LoginIdAuthCodeSendRequest.builder()
                 .name(expectedName)
                 .email(expectedEmail)
                 .build();
@@ -109,12 +116,12 @@ class UserApiControllerTest {
 
     @DisplayName("아이디 인증 코드 요청시, 이름을 입력하지 않은 경우 에러가 발생한다.")
     @Test
-    void sendAuthCodeWithBlankLoginId() throws Exception {
+    void sendLoginIdAuthCodeWithBlankLoginId() throws Exception {
         //given
         String blankName = "";
         String expectedEmail = "email@email.com";
 
-        UserIdSendAuthCodeRequest request = UserIdSendAuthCodeRequest.builder()
+        LoginIdAuthCodeSendRequest request = LoginIdAuthCodeSendRequest.builder()
                 .name(blankName)
                 .email(expectedEmail)
                 .build();
@@ -140,12 +147,12 @@ class UserApiControllerTest {
 
     @DisplayName("아이디 인증 코드 요청시, 받은 이메일의 형식에 맞지 않는 경우 에러가 발생한다.")
     @Test
-    void sendAuthCodeWithInvalidEmail() throws Exception {
+    void sendLoginIdAuthCodeWithInvalidEmail() throws Exception {
         //given
         String expectedName = "김사자";
         String wrongEmail = "wrongEmail";
 
-        UserIdSendAuthCodeRequest request = UserIdSendAuthCodeRequest.builder()
+        LoginIdAuthCodeSendRequest request = LoginIdAuthCodeSendRequest.builder()
                 .name(expectedName)
                 .email(wrongEmail)
                 .build();
@@ -170,14 +177,14 @@ class UserApiControllerTest {
 
     @DisplayName("아이디 인증 코드 검증 요청시, 이름,이메일,인증 코드 적절하게 받았을 경우 결과를 반환한다.")
     @Test
-    void verifyAuthCode() throws Exception {
+    void validLoginIdAuthCode() throws Exception {
         //given
         String expectedName = "김사자";
         String expectedEmail = "email@email.com";
         String expectedAuthCode = "123456";
         String mockLoginId = "loginId";
 
-        UserIdVerifyAuthCodeRequest request = UserIdVerifyAuthCodeRequest.builder()
+        LoginIdAuthCodeValidRequest request = LoginIdAuthCodeValidRequest.builder()
                 .name(expectedName)
                 .email(expectedEmail)
                 .authCode(expectedAuthCode)
@@ -185,12 +192,12 @@ class UserApiControllerTest {
 
         String data = objectMapper.writeValueAsString(request);
 
-        UserIdVerifyAuthCodeResponse response = UserIdVerifyAuthCodeResponse.builder()
+        LoginIdValidationResponse response = LoginIdValidationResponse.builder()
                 .loginId(mockLoginId)
                 .build();
 
         Mockito.when(
-                    userHelpService.verifyHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
+                    userHelpService.validHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
                 ).thenReturn(response);
 
         //when
@@ -208,15 +215,15 @@ class UserApiControllerTest {
                 .andExpect(jsonPath("$.data.loginId").value(mockLoginId));
     }
 
-    @DisplayName("아이디 인증 코드 검증 요청시, 이름  받았을 경우 결과를 반환한다.")
+    @DisplayName("아이디 인증 코드 검증 요청시, 이름과 이메일을 받아 인증요청 결과를 반환한다.")
     @Test
-    void verifyAuthCodeWithBlankName() throws Exception {
+    void validLoginIdAuthCodeWithBlankName() throws Exception {
         //given
         String expectedName = " ";
         String expectedEmail = "email@email.com";
         String expectedAuthCode = "123456";
 
-        UserIdVerifyAuthCodeRequest request = UserIdVerifyAuthCodeRequest.builder()
+        LoginIdAuthCodeValidRequest request = LoginIdAuthCodeValidRequest.builder()
                 .name(expectedName)
                 .email(expectedEmail)
                 .authCode(expectedAuthCode)
@@ -241,13 +248,13 @@ class UserApiControllerTest {
     }
     @DisplayName("아이디 인증 코드 검증 요청시, 받은 이메일의 형식에 맞지 않는 경우 에러가 발생한다.")
     @Test
-    void verifyAuthCodeWithInvalidEmail() throws Exception {
+    void validLoginIdAuthCodeWithInvalidEmail() throws Exception {
         //given
         String expectedName = "김사자";
         String expectedEmail = "wrongEmail";
         String expectedAuthCode = "123456";
 
-        UserIdVerifyAuthCodeRequest request = UserIdVerifyAuthCodeRequest.builder()
+        LoginIdAuthCodeValidRequest request = LoginIdAuthCodeValidRequest.builder()
                 .name(expectedName)
                 .email(expectedEmail)
                 .authCode(expectedAuthCode)
@@ -273,13 +280,13 @@ class UserApiControllerTest {
 
     @DisplayName("아이디 인증 코드 검증 요청시, 인증 코드가 없을 경우 에러가 발생한다.")
     @Test
-    void verifyAuthCodeWithBlankAuthCode() throws Exception {
+    void validLoginIdAuthCodeWithBlankAuthCode() throws Exception {
         //given
         String expectedName = "김사자";
         String expectedEmail = "email@email.com";
         String expectedAuthCode = "";
 
-        UserIdVerifyAuthCodeRequest request = UserIdVerifyAuthCodeRequest.builder()
+        LoginIdAuthCodeValidRequest request = LoginIdAuthCodeValidRequest.builder()
                 .name(expectedName)
                 .email(expectedEmail)
                 .authCode(expectedAuthCode)
@@ -303,4 +310,253 @@ class UserApiControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    @DisplayName("비밀번호를 찾을 계정이 존재하는지 확인하는 Api")
+    @Test
+    void isExistLoginId() throws Exception {
+        //given
+        String loginId ="existLoginId";
+        String key = UUID.randomUUID().toString();
+
+        LoginIdSearchResponse searchLoginIdResponse = LoginIdSearchResponse.builder()
+                .isExist(true)
+                .token(key)
+                .build();
+
+        Mockito.when(userHelpService.searchLoginId(anyString(), anyString()))
+                        .thenReturn(searchLoginIdResponse);
+
+        //when
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/search-loginId?loginId=" + loginId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.data.token").value(searchLoginIdResponse.getToken()));
+    }
+
+    @DisplayName("비밀번호 인증 코드 요청시 이름과 이메일을 받아 인증요청 결과를 반환한다.")
+    @Test
+    void sendPasswordAuthCode() throws Exception {
+        //given
+        String expectedName = "김사자";
+        String expectedEmail = "email@email.com";
+
+        PasswordAuthCodeSendRequest request = PasswordAuthCodeSendRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/send-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.code").value("200"));
+    }
+
+    @DisplayName("비밀번호 인증 코드 검증 요청시 받은 이메일의 형식에 맞지 않는 경우 에러가 발생한다.")
+    @Test
+    void sendPasswordAuthCodeWithInvalidEmail() throws Exception {
+        //given
+        String expectedName = "김사자";
+        String expectedEmail = "wrongEmail";
+
+        PasswordAuthCodeSendRequest request = PasswordAuthCodeSendRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/send-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("이메일 : 이메일 주소가 정확한지 확인해 주세요."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("비밀번호 인증 코드 검증 요청시, 이름이 비어있을 경우 애러가 발생한다.")
+    @Test
+    void sendPasswordAuthCodeWithBlankName() throws Exception {
+        //given
+        String expectedName = "";
+        String expectedEmail = "email@email.com";
+
+        PasswordAuthCodeSendRequest request = PasswordAuthCodeSendRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/send-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("이름 : 해당 입력은 필수입니다."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("비밀번호 인증 코드 검증 요청시, 이름, 이메일, 인증코드를 적절하게 받았을 경우 인증 결과를 반환한다.")
+    @Test
+    void validPasswordAuthCode() throws Exception {
+        //given
+        String expectedName = "김사자";
+        String expectedEmail = "email@email.com";
+        String expectedAuthCode = "123456";
+        String mockLoginId = "loginId";
+
+        PasswordAuthCodeValidRequest request = PasswordAuthCodeValidRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .authCode(expectedAuthCode)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        PasswordAuthCodeValidResponse response = PasswordAuthCodeValidResponse.builder()
+                .loginId(mockLoginId)
+                .build();
+
+        Mockito.when(
+                userHelpService.validPasswordAuthCode(anyString(),anyString(),anyString())
+        ).thenReturn(response);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/valid-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.data.loginId").value(mockLoginId));
+    }
+
+    @DisplayName("비밀번호 인증 코드 검증 요청시, 이름을 입력하지 않은 경우 에러가 발생한다.")
+    @Test
+    void validPasswordAuthCodeWithBlankLoginId() throws Exception {
+        //given
+        String expectedName = " ";
+        String expectedEmail = "email@email.com";
+        String expectedAuthCode = "123456";
+
+        PasswordAuthCodeValidRequest request = PasswordAuthCodeValidRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .authCode(expectedAuthCode)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/valid-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("이름 : 해당 입력은 필수입니다."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+
+    @DisplayName("비밀번호 인증 코드 검증 요청시, 받은 이메일이 형식에 맞지 않는 경우 에러가 발생한다.")
+    @Test
+    void validPasswordAuthCodeWithInvalidEmail() throws Exception {
+        //given
+        String expectedName = "김사자";
+        String expectedEmail = "wrongEmail";
+        String expectedAuthCode = "123456";
+
+        PasswordAuthCodeValidRequest request = PasswordAuthCodeValidRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .authCode(expectedAuthCode)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/valid-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("이메일 : 이메일 주소가 정확한지 확인해 주세요."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("비밀번호 인증 코드 검증 요청시, 인증코드가 비어있을 경우 에러가 발생한다.")
+    @Test
+    void validPasswordAuthCodeWithBlankAuthCode() throws Exception {
+        //given
+        String expectedName = "김사자";
+        String expectedEmail = "email@email.com";
+        String expectedAuthCode = "";
+
+        PasswordAuthCodeValidRequest request = PasswordAuthCodeValidRequest.builder()
+                .name(expectedName)
+                .email(expectedEmail)
+                .authCode(expectedAuthCode)
+                .build();
+
+        String data = objectMapper.writeValueAsString(request);
+
+        //when
+        //then
+        mockMvc.perform(
+                        post("/api/users/valid-password-auth-code")
+                                .with(csrf())
+                                .contentType(APPLICATION_JSON)
+                                .content(data)
+                )
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("인증 코드 : 해당 입력은 필수입니다."))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
 }
