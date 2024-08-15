@@ -33,7 +33,12 @@
             })
         })
             .fail((error)=>{
-                console.error("실패 = " + JSON.stringify(error))
+                if(error.responseJSON.status === "BAD_REQUEST"){
+                    alert(error.responseJSON.message)
+                } else{
+                    alert("일시적인 에러가 발생했습니다. 관리자에게 문의 해주시면 감사합니다.")
+                }
+                console.error(JSON.stringify(error))
             })
     })
 
@@ -83,10 +88,12 @@
                 }
             })
             .fail((error)=>{
+                if(error.responseJSON.status === "BAD_REQUEST"){
+                    alert(error.responseJSON.message)
+                } else{
+                    alert("일시적인 에러가 발생했습니다. 관리자에게 문의 해주시면 감사합니다.")
+                }
                 console.error(JSON.stringify(error))
-                $("#globalErrorDiv").empty().append(`
-                    <p style="color: #dc3545">${error.message}</p>
-                `)
             })
     })
 </script>
