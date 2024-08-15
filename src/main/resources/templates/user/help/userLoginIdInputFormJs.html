@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <meta charset="UTF-8">
+    <title>비밀번호 찾기</title>
+</head>
+<body>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <script th:fragment="LoginIdInputFormJs()" th:inline="javascript">
+        function existLoginId(loginId){
+            $.get("/api/users/search-loginId?loginId=" + loginId)
+                .done((result)=>{
+                    if(result.status.match("OK")){
+                        viewPasswordAuth(result.data.token)
+                    } else{
+                        alert("해당 아이디는 존재하지 않는 계정입니다.")
+                    }
+                })
+                .fail((error)=>{
+                    alert("일시적인 에러가 발생했습니다. 관리자에게 문의 해주시면 감사합니다.")
+                    console.error(JSON.stringify(error))
+                })
+        }
+        $("#loginIdSearchBtn").on('click',()=>{
+            const loginId = $("#loginId").val();
+            if(loginId === ""){
+                alert("아이디를 확인해주세요.")
+                $("#loginId").focus();
+                return false;
+            }
+            existLoginId(loginId)
+        })
+
+        function viewPasswordAuth(token){
+            document.location.href="/users/help-password?menu=viewPasswordAuth&token_help="+token
+        }
+    </script>
+</body>
+</body>
+</html>
