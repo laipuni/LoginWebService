@@ -2,11 +2,13 @@ package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.Email.AuthCodeUtils;
 import com.loginwebservice.loginwebservice.Email.EmailService;
-import com.loginwebservice.loginwebservice.domain.user.response.SearchLoginIdResponse;
-import com.loginwebservice.loginwebservice.domain.user.response.UserIdVerifyAuthCodeResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdValidationResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.PasswordAuthCodeValidResponse;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
 import com.loginwebservice.loginwebservice.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ public class UserHelpService {
     @Value("${spring.help.token.expireTime}")
     private long tokenHelpExpireTime;
 
+    private final PasswordEncoder passwordEncoder;
     private final RedisService redisService;
     private final EmailService emailService;
     private final UserRepository userRepository;
@@ -41,7 +44,7 @@ public class UserHelpService {
         emailService.sendEmail(email, authCode,title);
     }
 
-    public UserIdVerifyAuthCodeResponse verifyHelpUserIdAuthCode(final String authCode, final String name, final String email){
+    public LoginIdValidationResponse validHelpUserIdAuthCode(final String authCode, final String name, final String email){
         String findAuthCode = redisService.getData(email);
         if(findAuthCode == null){
             throw new IllegalArgumentException("인증 요청을 다시 요청해주십시오.");
@@ -49,19 +52,19 @@ public class UserHelpService {
         if(!findAuthCode.equals(authCode)){
             throw new IllegalArgumentException("인증 코드를 잘못 작성하셨습니다. 입력한 정보가 맞는지 다시 확인해주세요.");
         }
-        UserIdVerifyAuthCodeResponse response = userRepository.findByNameAndEmail(name, email)
+        LoginIdValidationResponse response = userRepository.findLoginIdValidationDtoBy(name, email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 정보와 일치하는 유저는 존재하지 않습니다."));
         redisService.deleteData(email);
         return response;
     }
 
-    public SearchLoginIdResponse searchLoginId(final String loginId, final String helpToken){
+    public LoginIdSearchResponse searchLoginId(final String loginId, final String helpToken){
         User user = userRepository.findUserByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
         redisService.setDataExpire(helpToken, user.getLoginId(), tokenHelpExpireTime);
 
-        return SearchLoginIdResponse.of(true,helpToken);
+        return LoginIdSearchResponse.of(true,helpToken);
     }
 
     public void helpUserPassword(final String name,final String email){
@@ -81,5 +84,32 @@ public class UserHelpService {
         emailService.sendEmail(email, authCode,title);
     }
 
+    public PasswordAuthCodeValidResponse validPasswordAuthCode(final String authCode, final String name, final String email){
+        String findAuthCode = redisService.getData(email);
+        if(findAuthCode == null){
+            throw new IllegalArgumentException("인증 요청을 다시 요청해주십시오.");
+        }
+        if(!findAuthCode.equals(authCode)){
+            throw new IllegalArgumentException("인증 코드를 잘못 작성하셨습니다. 입력한 정보가 맞는지 다시 확인해주세요.");
+        }
+        PasswordAuthCodeValidResponse response = userRepository.findPasswordValidationDtoBy(name, email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 정보와 일치하는 유저는 존재하지 않습니다."));
+        redisService.deleteData(email);
+        return response;
+    }
 
+    @Transactional
+    public void resetPassword(final String token, final String password) {
+        String loginId = redisService.getData(token);
+        if(loginId == null){
+            throw new IllegalArgumentException("비밀번호 세션이 만료됐습니다.");
+        }
+        User user = userRepository.findUserByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않거나 변경할 수 없는 유저입니다."));
+        if(passwordEncoder.matches(password, user.getPassword())){
+            throw new IllegalArgumentException("이전 비밀번호와 같습니다. 다른 비밀번호로 입력해주세요.");
+        }
+        String encodedPassword = passwordEncoder.encode(password);
+        user.resetPassword(encodedPassword);
+    }
 }
