@@ -5,6 +5,6 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UserIdVerifyAuthCodeResponse {
+public class LoginIdValidationResponse {
     private String loginId;
 }
