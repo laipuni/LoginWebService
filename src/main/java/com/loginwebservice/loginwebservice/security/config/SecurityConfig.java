@@ -31,7 +31,9 @@ public class SecurityConfig {
                                 "/error/**","/css/**",
                                 "/users/join/success","/api/users/join/check-login-id",
                                 "/api/users/join/check-user-name","/api/users/send-id-auth-code",
-                                "/api/users/valid-id-auth-code", "/users/help-id"
+                                "/api/users/valid-id-auth-code", "/users/help-id","/users/help-password",
+                                "/api/users/search-loginId","/api/users/send-password-auth-code",
+                                "/api/users/valid-password-auth-code","/api/users/reset-password"
                         )
                         .permitAll()
                 )
