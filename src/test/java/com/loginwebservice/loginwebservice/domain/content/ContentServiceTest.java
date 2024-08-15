@@ -59,11 +59,11 @@ class ContentServiceTest extends IntegrationTest {
         assertThat(contentList).hasSize(1)
                 .extracting("contents","userName")
                 .containsExactlyInAnyOrder(
-                        tuple(contents,expectedName)
+                        tuple(contents,expectedUserName)
                 );
         assertThat(contentList.get(0).getUser())
-                .extracting("name","email")
-                .containsExactly(expectedName,expectedEmail);
+                .extracting("userName","email")
+                .containsExactly(expectedUserName,expectedEmail);
     }
 
     @DisplayName("컨텐츠를 등록할 때, 등록되지 않은 유저일 경우 에러가 발생한다.")
