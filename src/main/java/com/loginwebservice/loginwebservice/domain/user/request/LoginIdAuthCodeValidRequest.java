@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserIdVerifyAuthCodeRequest {
+public class LoginIdAuthCodeValidRequest {
 
     @NotBlank(message = "이름 : 해당 입력은 필수입니다.")
     private String name;
