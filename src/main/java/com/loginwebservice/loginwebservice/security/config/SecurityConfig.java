@@ -26,16 +26,25 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers(
-                                "/login/**", "/users/join",
-                                "/profile","/logout/**",
-                                "/error/**","/css/**",
-                                "/users/join/success","/api/users/join/check-login-id",
-                                "/api/users/join/check-user-name","/api/users/send-id-auth-code",
-                                "/api/users/valid-id-auth-code", "/users/help-id","/users/help-password",
-                                "/api/users/search-loginId","/api/users/send-password-auth-code",
-                                "/api/users/valid-password-auth-code","/api/users/reset-password"
+                                "/login/**", "/profile",
+                                "/error/**","/css/**"
                         )
                         .permitAll()
+                        .requestMatchers(//회원가입 관련 url
+                                "/users/join",
+                                "/users/join/success",
+                                "/api/users/join/check-login-id",
+                                "/api/users/join/check-user-name"
+                        ).permitAll()
+                        .requestMatchers(//아이디 찾기 관련 url
+                                "/api/users/send-id-auth-code",
+                                "/api/users/valid-id-auth-code", "/users/help-id"
+                        ).permitAll()
+                        .requestMatchers(//비밀번호 찾기 관련 url
+                                "/users/help-password",
+                                "/api/users/search-loginId","/api/users/send-password-auth-code",
+                                "/api/users/valid-password-auth-code","/api/users/reset-password"
+                        ).permitAll()
                 )
                 .authorizeHttpRequests((authorize)-> authorize
                         .anyRequest().authenticated()
