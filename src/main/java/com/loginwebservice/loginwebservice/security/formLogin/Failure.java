@@ -1,5 +1,6 @@
 package com.loginwebservice.loginwebservice.security.formLogin;
 
+import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginFailException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -31,6 +32,11 @@ public enum Failure {
     AUTHENTICATION_REJECTED(
             new AuthenticationCredentialsNotFoundException(
                     "인증 요청이 거부 되었습니다. 관리자에게 문의해주십시오."
+            )
+    ),
+    LOGIN_FAIL(
+            new LoginFailException(
+                    "해당 계정은 5번이상 로그인 시도 했습니다. 15분간 계정이 보안 상태로 들어갑니다."
             )
     );
 
