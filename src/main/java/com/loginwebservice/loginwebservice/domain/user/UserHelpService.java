@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -41,7 +43,14 @@ public class UserHelpService {
         String title = "[아이디] 인증 번호입니다.";
         String authCode = AuthCodeUtils.createAuthCode();
         redisService.setDataExpire(email,authCode, authExpireTime);
-        emailService.sendEmail(email, authCode,title);
+        emailService.sendEmail(
+                email,"mail/authMailForm",
+                Map.of(
+                        "authCode",authCode,
+                        "subject", "아이디 찾기"
+                ),
+                title
+        );
     }
 
     public LoginIdValidationResponse validHelpUserIdAuthCode(final String authCode, final String name, final String email){
@@ -81,7 +90,14 @@ public class UserHelpService {
         String title = "[비밀번호] 인증 번호입니다.";
         String authCode = AuthCodeUtils.createAuthCode();
         redisService.setDataExpire(email,authCode, authExpireTime);
-        emailService.sendEmail(email, authCode,title);
+        emailService.sendEmail(
+                email,"mail/authMailForm",
+                Map.of(
+                        "authCode",authCode,
+                        "subject", "비밀번호 찾기"
+                ),
+                title
+        );
     }
 
     public PasswordAuthCodeValidResponse validPasswordAuthCode(final String authCode, final String name, final String email){
