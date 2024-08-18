@@ -14,6 +14,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    public static final String USERNAME_PARAMETER = "loginId";
+    public static final String PASSWORD_PARAMETER = "password";
+
+
     private final CustomOAuth2UserService customOAuth2UserService;
     private final FormAuthenticationProvider formAuthenticationProvider;
     private final FormLoginFailureHandler formLoginFailureHandler;
@@ -52,8 +56,8 @@ public class SecurityConfig {
                 .formLogin(
                         (login)-> login
                                 .loginPage("/login")
-                                .usernameParameter("loginId")
-                                .passwordParameter("password")
+                                .usernameParameter(USERNAME_PARAMETER)
+                                .passwordParameter(PASSWORD_PARAMETER)
                                 .successHandler(formLoginSuccessHandler)
                                 .failureHandler(formLoginFailureHandler)
                 )
