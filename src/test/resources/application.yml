@@ -38,6 +38,11 @@ spring:
           starttls:
             enable: true
             required: true
+  login:
+    Fail:
+      count: 5
+      countExpiredTime: 1800
+      LockExpiredTime: 1800
 
   data:
     redis:
