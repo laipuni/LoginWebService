@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +55,14 @@ class UserHelpServiceTest extends IntegrationTest {
         String notFoundEmail = EXPECTED_EMAIL;
         String name = "김사자";
 
-        Mockito.when(emailService.sendEmail(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(emailService.sendEmail(
+                Mockito.anyString(),Mockito.anyString(),
+                        Map.of(
+                                "authCode",Mockito.anyString(),
+                                "subject","아이디 찾기"
+                        ),
+                        Mockito.anyString()
+                ))
                 .thenReturn(true);
 
         //when
@@ -182,7 +190,14 @@ class UserHelpServiceTest extends IntegrationTest {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(expectedEmail,beforePasswordAuthCode);
 
-        Mockito.when(emailService.sendEmail(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(emailService.sendEmail(
+                        Mockito.anyString(),Mockito.anyString(),
+                        Map.of(
+                                "authCode",Mockito.anyString(),
+                                "subject","비밀번호 찾기"
+                        ),
+                        Mockito.anyString()
+                ))
                 .thenReturn(true);
         //when
         userHelpService.helpUserPassword(expectedName,expectedEmail);
@@ -199,7 +214,14 @@ class UserHelpServiceTest extends IntegrationTest {
         String expectedName="김사자";
         String expectedEmail = "email@email.com";
 
-        Mockito.when(emailService.sendEmail(Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(emailService.sendEmail(
+                        Mockito.anyString(),Mockito.anyString(),
+                        Map.of(
+                                "authCode",Mockito.anyString(),
+                                "subject","비밀번호 찾기"
+                        ),
+                        Mockito.anyString()
+                ))
                 .thenReturn(true);
         //when
         //then
