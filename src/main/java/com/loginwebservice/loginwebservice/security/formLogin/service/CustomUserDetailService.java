@@ -1,4 +1,4 @@
-package com.loginwebservice.loginwebservice.security.formLogin;
+package com.loginwebservice.loginwebservice.security.formLogin.service;
 
 import com.loginwebservice.loginwebservice.domain.user.User;
 import com.loginwebservice.loginwebservice.domain.user.UserRepository;
