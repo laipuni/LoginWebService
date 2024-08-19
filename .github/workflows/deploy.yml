@@ -122,7 +122,7 @@ jobs:
         run: aws deploy create-deployment --application-name login-webservice
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name login-webservice-group
-          --s3-location bucket=login-webservice-build,bundleType=zip,key=deploy/login-webservice.zip
+          --s3-location bucket=login-webservice-build,bundleType=zip,key=/login-webservice.zip
 
           
       
