@@ -112,19 +112,20 @@ jobs:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_KEY}}
           aws-region: ap-northeast-2
-
+        
       # S3에 build파일을 업로드
       - name: Upload to S3
         uses: ramonpaolo/action-upload-s3@v0.3.1
         with:
-          aws_region: ap-northeast-2
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY}}
+          AWS_REGION: ap-northeast-2
           AWS_BUCKET_NAME: login-webservice-build
           storage_class: zip
           local_path_upload: deploy/login-webservice.zip
           name_to_save_on_s3: login-webservice
-      - name: Sourcetoad - AWS CodeDeploy for GitHub Actions
-        # You may pin to the exact commit or the version.
-        # uses: sourcetoad/aws-codedeploy-action@e6b67d8f4ffff0e4b8a3583de5f48f30700debbd
+        
+      - name: AWS CodeDeploy for GitHub Actions
         uses: sourcetoad/aws-codedeploy-action@v1.11.0
         with:
           aws_region: ap-northeast-2
