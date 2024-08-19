@@ -117,16 +117,12 @@ jobs:
       - name: upload build file to S3
         run: aws s3 cp ./deploy/login-webservice.zip s3://login-webservice-build/login-webservice.zip --acl private
           
-      - name: AWS CodeDeploy for GitHub Actions
-        uses: sourcetoad/aws-codedeploy-action@v1.11.0
-        with:
-          aws_region: ap-northeast-2
-          s3_bucket: login-webservice-build 
-          s3_folder: /
-          archive: login-webservice.zip
-          codedeploy_file_exists_behavior: OVERWRITE
-          codedeploy_name: login-webservice
-          codedeploy_group: login-webservice-group
+      # CodeDeploy에 배포 요청
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name login-webservice
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name login-webservice-group
+          --s3-location bucket=login-webservice-build,bundleType=zip,key=deploy/login-webservice.zip
 
           
       
