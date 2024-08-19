@@ -34,6 +34,12 @@ jobs:
       # 빌드 시간 향상을 위한 캐싱
       - name: Cache
         uses: actions/cache@v4.0.2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
 
       # redis server 열기
       - name: Redis Server in GitHub Actions
