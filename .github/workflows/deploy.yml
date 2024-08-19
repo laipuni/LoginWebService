@@ -113,18 +113,12 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_KEY}}
           aws-region: ap-northeast-2
         
-      # S3에 build파일을 업로드
-      - name: Upload S3
-        uses: shallwefootball/upload-s3-action@v1.3.3
-        with:
-          # aws key id
-          aws_key_id: ${{secrets.AWS_ACCESS_KEY}}
-          # aws secret access key
-          aws_secret_access_key: ${{secrets.AWS_SECRET_KEY}}
-          # aws bucket name
-          aws_bucket: login-webservice-build
-          # directory to upload
-          source_dir: deploy
+      # S3에 build(dist 폴더) 파일 업로드
+      - name: upload build file to S3
+        run: aws s3 cp --region ap-northeast-2 ./deploy/login-webservice.zip s3://login-webservice-build/ --acl private-read
+        env:
+           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY}}
           
         
       - name: AWS CodeDeploy for GitHub Actions
