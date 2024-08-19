@@ -121,8 +121,10 @@ jobs:
         uses: sourcetoad/aws-codedeploy-action@v1.11.0
         with:
           aws_region: ap-northeast-2
-          s3_bucket: login-webservice-build
-          s3_folder: login-webservice.zip 
+          s3_bucket: login-webservice-build 
+          s3_folder: /
+          archive: ./deploy/login-webservice.zip
+          codedeploy_file_exists_behavior: OVERWRITE
           codedeploy_name: login-webservice
           codedeploy_group: login-webservice-group
 
