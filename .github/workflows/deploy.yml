@@ -28,7 +28,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4.2.2 
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
         
       # 빌드 시간 향상을 위한 캐싱
