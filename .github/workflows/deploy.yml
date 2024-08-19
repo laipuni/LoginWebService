@@ -115,12 +115,8 @@ jobs:
         
       # S3에 build(dist 폴더) 파일 업로드
       - name: upload build file to S3
-        run: aws s3 cp --region ap-northeast-2 ./deploy/login-webservice.zip s3://login-webservice-build/ --acl private-read
-        env:
-           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY}}
+        run: aws s3 cp ./deploy/login-webservice.zip s3://login-webservice-build/ --acl private-read
           
-        
       - name: AWS CodeDeploy for GitHub Actions
         uses: sourcetoad/aws-codedeploy-action@v1.11.0
         with:
