@@ -52,7 +52,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-oauth.yml
-          echo ${{secrets.APPLICATION_OAUTH}} >> ./application-oauth.yml
+          echo "${{secrets.APPLICATION_OAUTH}}" >> ./application-oauth.yml
         shell: bash
       
         # application-redis.yml 만들기
@@ -62,7 +62,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-redis.yml
-          echo ${{secrets.APPLICATION_REDIS}} >> ./application-redis.yml
+          echo "${{secrets.APPLICATION_REDIS}}" >> ./application-redis.yml
         shell: bash
 
         # application-real-db.yml 만들기
@@ -72,7 +72,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-real-db.yml
-          echo ${{secrets.APPLICATION_REAL_DB}} >> ./application-real-db.yml
+          echo "${{secrets.APPLICATION_REAL_DB}}" >> ./application-real-db.yml
         shell: bash
 
         # application-mail.yml 만들기
@@ -82,7 +82,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-mail.yml
-          echo ${{secrets.APPLICATION_MAIL}} >> ./application-mail.yml
+          echo "${{secrets.APPLICATION_MAIL}}" >> ./application-mail.yml
         shell: bash
 
       #gradle clean and build
