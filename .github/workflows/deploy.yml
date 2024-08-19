@@ -85,6 +85,10 @@ jobs:
           echo "${{secrets.APPLICATION_MAIL}}" >> ./application-mail.yml
         shell: bash
 
+      #gradlew 실행 권한 추가
+      - name: add excute mod
+        run: chmod +x gradlew
+      
       #gradle clean and build
       - name: Build with Gradle
         run: ./gradlew clean build
