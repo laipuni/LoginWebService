@@ -46,6 +46,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Role role;
 
+    @Column
+    private boolean isAuthenticated;
+
     @Builder
     private User(
                  final String name,
@@ -63,6 +66,7 @@ public class User extends BaseEntity {
         this.userName = userName;
         this.loginId = loginId;
         this.password = password;
+        this.isAuthenticated = false;
     }
 
     public static User of(
@@ -107,4 +111,9 @@ public class User extends BaseEntity {
         }
         this.password = password;
     }
+
+    public void changeAuthentication(){
+        this.isAuthenticated = true;
+    }
+
 }
