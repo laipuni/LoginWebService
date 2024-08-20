@@ -1,6 +1,6 @@
 package com.loginwebservice.loginwebservice.security.formLogin;
 
-import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginFailException;
+import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginLockException;
 import com.loginwebservice.loginwebservice.security.formLogin.service.CustomUserDetailService;
 import com.loginwebservice.loginwebservice.security.formLogin.service.LoginFailService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
 
         if(loginFailService.hasLoginLock(loginId)){
-            throw new LoginFailException("해당 계정은 5번이상 로그인 시도 했습니다.");
+            throw new LoginLockException("해당 계정은 5번이상 로그인 시도 했습니다.");
         }
 
         UserDetails user = userDetailService.loadUserByUsername(loginId);

@@ -1,6 +1,6 @@
 package com.loginwebservice.loginwebservice.security.formLogin;
 
-import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginFailException;
+import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginLockException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -35,7 +35,7 @@ public enum Failure {
             )
     ),
     LOGIN_FAIL(
-            new LoginFailException(
+            new LoginLockException(
                     "해당 계정은 5번이상 로그인 시도 했습니다. 15분간 계정이 보안 상태로 들어갑니다."
             )
     );
