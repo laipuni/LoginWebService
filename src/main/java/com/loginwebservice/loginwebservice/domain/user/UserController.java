@@ -1,6 +1,7 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
+import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
 import com.loginwebservice.loginwebservice.redis.RedisService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,16 +9,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserRegisterService userRegisterService;
     private final RedisService redisService;
 
     @GetMapping("/users/join")
@@ -35,14 +33,20 @@ public class UserController {
             return "user/userAddForm";
         }
 
-        //중복된 유저가 존재해 에러가 발생한 경우
         try{
-            userService.join(request);
+            userRegisterService.register(UserAddServiceRequest.of(request));
         } catch (DataIntegrityViolationException exception){
+            //중복된 유저가 존재할 경우
             model.addAttribute("globalError","기입된 정보 중에 일치하는 유저가 존재합니다.");
             return "user/userAddForm";
         }
 
+        return "redirect:/login";
+    }
+
+    @GetMapping("/users/{loginId}/verify-register")
+    public String verifyRegister(@PathVariable("loginId")String loginId){
+        userRegisterService.verifyRegister(loginId);
         return "redirect:/users/join/success";
     }
 
@@ -93,4 +97,6 @@ public class UserController {
         model.addAttribute("loginId",loginId);
         return "user/help/userPasswordInputForm";
     }
+
+
 }
