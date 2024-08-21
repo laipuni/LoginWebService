@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers(
                                 "/login/**", "/profile",
-                                "/error/**","/css/**"
+                                "/error/**","/css/**", "/users/{loginId}/verify-register"
                         )
                         .permitAll()
                         .requestMatchers(//회원가입 관련 url
