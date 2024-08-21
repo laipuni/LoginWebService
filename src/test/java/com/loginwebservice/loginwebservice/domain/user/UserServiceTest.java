@@ -1,7 +1,7 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.IntegrationTest;
-import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
+import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class UserServiceTest extends IntegrationTest {
         String expectedPassword = "비밀번호";
         String expectedUserName = "라이푸니";
         String expectedEmail = "email@gmail.com";
-        UserAddRequest request = UserAddRequest.builder()
+        UserAddServiceRequest request = UserAddServiceRequest.builder()
                 .loginId(expectedLoginId)
                 .password(expectedPassword)
                 .userName(expectedUserName)
@@ -79,7 +79,7 @@ class UserServiceTest extends IntegrationTest {
 
         userRepository.save(user);
 
-        UserAddRequest request = UserAddRequest.builder()
+        UserAddServiceRequest request = UserAddServiceRequest.builder()
                 .loginId(expectedLoginId)
                 .password(expectedPassword)
                 .name(expectedName)
