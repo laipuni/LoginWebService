@@ -1,0 +1,132 @@
+# This is a basic workflow to help you get started with Actions
+
+name: github action on LoginWebService
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: CheckOut
+        uses: actions/checkout@v4.1.7
+      # jdk 17 설치
+      - name: Set up JDK
+        uses: actions/setup-java@v4.2.2 
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+        
+      # 빌드 시간 향상을 위한 캐싱
+      - name: Cache
+        uses: actions/cache@v4.0.2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+
+      # redis server 열기
+      - name: Redis Server in GitHub Actions
+        uses: supercharge/redis-github-action@1.8.0
+
+      # application-oauth.yml 만들기
+      - name: make application-oauth.yml
+        if: |
+          contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-oauth.yml
+          echo "${{secrets.APPLICATION_OAUTH}}" >> ./application-oauth.yml
+        shell: bash
+      
+        # application-redis.yml 만들기
+      - name: make application-redis.yml
+        if: |
+          contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-redis.yml
+          echo "${{secrets.APPLICATION_REDIS}}" >> ./application-redis.yml
+        shell: bash
+
+        # application-real-db.yml 만들기
+      - name: make application-real-db.yml
+        if: |
+          contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-real-db.yml
+          echo "${{secrets.APPLICATION_REAL_DB}}" >> ./application-real-db.yml
+        shell: bash
+
+        # application-mail.yml 만들기
+      - name: make application-mail.yml
+        if: |
+          contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-mail.yml
+          echo "${{secrets.APPLICATION_MAIL}}" >> ./application-mail.yml
+        shell: bash
+
+      #gradlew 실행 권한 추가
+      - name: add excute mod
+        run: chmod +x gradlew
+      
+      #gradle clean and build
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: before_deploy
+        if: contains(github.ref, 'main')
+        run: |
+          mkdir -p before-deploy/
+          cp scripts/*.sh before-deploy/
+          cp appspec.yml before-deploy/
+          cp ./build/libs/*.jar before-deploy/
+          cp src/main/resources/application-real1.yml before-deploy/
+          cp src/main/resources/application-real2.yml before-deploy/
+          cd ./before-deploy/ && zip -r before-deploy *
+          cd ../ && mkdir -p deploy
+          mv ./before-deploy/before-deploy.zip ./deploy/login-webservice.zip
+        shell: bash
+
+      # github action이 aws 서비스들(s3, codedeploy)에 접근할 IAM key, region 설정
+      - name: Configure AWS Credentials Action for GitHub Actions
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_KEY}}
+          aws-region: ap-northeast-2
+        
+      # S3에 build(dist 폴더) 파일 업로드
+      - name: upload build file to S3
+        run: aws s3 cp ./deploy/login-webservice.zip s3://login-webservice-build/login-webservice.zip --acl private
+          
+      # CodeDeploy에 배포 요청
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name login-webservice
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name login-webservice-group
+          --s3-location bucket=login-webservice-build,bundleType=zip,key=login-webservice.zip
+
+          
+      
+        
+
