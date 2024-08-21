@@ -10,7 +10,10 @@
     function createContent(contentId,picture,userName,contents,createDate){
         return `
                 <div id="content${contentId}" class="list-group-item list-group-item-action d-flex gap-3 py-3">
-                     <img src="${picture}" alt="image not found" onerror="//C:/Users/LYM/Downloads/Profile%20Basic%20Image.svg" width="32" height="32" class="rounded-circle flex-shrink-0">
+                     ${picture !== null ? //만약 프로필 사진이 존재하지 않을 경우 기본 아이콘으로 표시
+                        `<img src="${picture}" alt="image not found" width="32" height="32" class="rounded-circle flex-shrink-0">` :
+                        `<i class="bi bi-person-circle"></i>`
+                     }
                      <div class="d-flex gap-2 w-100 justify-content-between">
                         <div>
                             <h6 class="mb-0">${userName}</h6>
@@ -20,6 +23,7 @@
                      </div>
                 </div>
                 `
+
     }
 
     $(window).on('load',()=>{
