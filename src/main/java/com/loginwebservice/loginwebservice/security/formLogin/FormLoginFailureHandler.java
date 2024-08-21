@@ -1,5 +1,7 @@
 package com.loginwebservice.loginwebservice.security.formLogin;
 
+import com.loginwebservice.loginwebservice.domain.user.UserRegisterService;
+import com.loginwebservice.loginwebservice.security.formLogin.exception.NotAuthenticationUserException;
 import com.loginwebservice.loginwebservice.security.formLogin.service.LoginFailService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     
     private final LoginFailService loginFailService;
+    private final UserRegisterService userRegisterService;
 
     @Override
     public void onAuthenticationFailure(
@@ -30,7 +33,11 @@ public class FormLoginFailureHandler extends SimpleUrlAuthenticationFailureHandl
             final AuthenticationException exception
     ) throws IOException, ServletException {
         String loginId = request.getParameter(USERNAME_PARAMETER);
-        loginFailService.alertLoginFailTo(loginId);
+        if(exception instanceof NotAuthenticationUserException){
+            userRegisterService.sendRegisterAuthEmail(loginId);
+        }else {
+            loginFailService.alertLoginFailTo(loginId);
+        }
         String errorMessage = Failure.findErrorMessage(exception.getClass());
         log.info("[FormLoginFailureHandler] : FormLogin Fail, message = {}",errorMessage);
         String encodedErrorMessage = URLEncoder.encode(errorMessage, UTF_8);
