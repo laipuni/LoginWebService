@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,6 +25,9 @@ class UserControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @MockBean
+    UserRegisterService userRegisterService;
 
     @DisplayName("회원가입 화면을 반환한다.")
     @Test
@@ -45,6 +49,7 @@ class UserControllerTest {
                 .name("라이푸니")
                 .userName("라이푸니")
                 .build();
+
         //when
         //then
         mockMvc.perform(
@@ -59,7 +64,7 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/users/join/success"));
+                .andExpect(redirectedUrl("/login"));
     }
 
     @DisplayName("회원가입 요청을 받았을 때, 아이디에 대문자가 있을 경우 에러가 발생한다.")
@@ -442,8 +447,6 @@ class UserControllerTest {
                 .name(" ")
                 .userName("라이푸니")
                 .build();
-
-        
 
         //when
         //then
