@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,7 +28,8 @@ public class UserController {
     public String join(
             @Valid @ModelAttribute(name = "user") UserAddRequest request,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            RedirectAttributes attributes
     ){
         if(bindingResult.hasErrors()){
             return "user/userAddForm";
@@ -41,13 +43,23 @@ public class UserController {
             return "user/userAddForm";
         }
 
-        return "redirect:/login";
+        attributes.addFlashAttribute("email",request.getEmail());
+        return "redirect:/users/join/register-auth";
     }
 
-    @GetMapping("/users/{loginId}/verify-register")
-    public String verifyRegister(@PathVariable("loginId")String loginId){
+    @GetMapping("/users/join/{loginId}/verify-register")
+    public String verifyRegister(
+            @PathVariable("loginId")String loginId
+    ){
         userRegisterService.verifyRegister(loginId);
         return "redirect:/users/join/success";
+    }
+
+    @GetMapping("/users/join/register-auth")
+    public String alertRegisterAuth(
+            Model model
+    ){
+        return "user/alertRegisterAuth";
     }
 
     @GetMapping("/users/join/success")
