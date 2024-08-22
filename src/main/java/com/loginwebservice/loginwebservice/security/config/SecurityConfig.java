@@ -5,19 +5,26 @@ import com.loginwebservice.loginwebservice.security.formLogin.FormLoginFailureHa
 import com.loginwebservice.loginwebservice.security.formLogin.FormLoginSuccessHandler;
 import com.loginwebservice.loginwebservice.security.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    @Value("${spring.security.rememberMe.expireTime}")
+    public int rememberMeTokenExpireTime;
+
     public static final String USERNAME_PARAMETER = "loginId";
     public static final String PASSWORD_PARAMETER = "password";
+    public static final String REMEMBER_ME_PARAMETER = "remember";
 
 
+    private final UserDetailsService userDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final FormAuthenticationProvider formAuthenticationProvider;
     private final FormLoginFailureHandler formLoginFailureHandler;
@@ -73,6 +80,12 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
                         .deleteCookies()
+                )
+                .rememberMe( (remember) -> remember
+                        .rememberMeParameter(REMEMBER_ME_PARAMETER)
+                        .tokenValiditySeconds(rememberMeTokenExpireTime)
+                        .alwaysRemember(false)
+                        .userDetailsService(userDetailsService)
                 )
                 .authenticationProvider(formAuthenticationProvider)
                 .build();
