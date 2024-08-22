@@ -16,6 +16,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class UserController {
 
+    public static final String VIEW_PASSWORD_AUTH = "viewPasswordAuth";
+    public static final String VIEW_PASSWORD_INPUT = "viewPasswordInput";
+
+
     private final UserRegisterService userRegisterService;
     private final RedisService redisService;
 
@@ -93,10 +97,10 @@ public class UserController {
 
         model.addAttribute("token_help",token);
 
-        if(menu.equals("viewPasswordAuth")){
+        if(menu.equals(VIEW_PASSWORD_AUTH)){
             //인증 화면
             return "user/help/userPasswordAuthForm";
-        } else if(menu.equals("viewPasswordInput")){
+        } else if(menu.equals(VIEW_PASSWORD_INPUT)){
             //비밀번호 재설정
             return createViewUserPasswordInputForm(token, model);
         } else{
