@@ -29,7 +29,7 @@ public class UserRegisterService {
         emailService.sendEmail(
                 email,
                 "mail/registerAuthMailForm",
-                Map.of("registerAuthUrl",domain + "/users/" + loginId + "/verify-register"),
+                Map.of("registerAuthUrl",domain + "/users/join/" + loginId + "/verify-register"),
                 "회원가입 인증 이메일입니다."
         );
     }
