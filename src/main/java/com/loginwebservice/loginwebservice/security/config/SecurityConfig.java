@@ -31,14 +31,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize)-> authorize
                         .requestMatchers(
                                 "/login/**", "/profile",
-                                "/error/**","/css/**", "/users/{loginId}/verify-register"
+                                "/error/**","/css/**"
                         )
                         .permitAll()
                         .requestMatchers(//회원가입 관련 url
                                 "/users/join",
                                 "/users/join/success",
                                 "/api/users/join/check-login-id",
-                                "/api/users/join/check-user-name"
+                                "/api/users/join/check-user-name",
+                                "/users/join/{loginId}/verify-register",
+                                "/users/join/register-auth"
                         ).permitAll()
                         .requestMatchers(//아이디 찾기 관련 url
                                 "/api/users/send-id-auth-code",
