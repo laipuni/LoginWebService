@@ -2,8 +2,10 @@ package com.loginwebservice.loginwebservice.domain.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
+import com.loginwebservice.loginwebservice.redis.RedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,9 @@ class UserControllerTest {
 
     @MockBean
     UserRegisterService userRegisterService;
+
+    @MockBean
+    RedisService redisService;
 
     @DisplayName("회원가입 화면을 반환한다.")
     @Test
@@ -64,7 +69,103 @@ class UserControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
+                .andExpect(redirectedUrl("/users/join/register-auth"));
+    }
+
+    @DisplayName("회원가입 인증을 요구하는 페이지 api")
+    @Test
+    void alertRegisterAuth() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/users/join/register-auth")
+        )
+                .andDo(print())
+                .andExpect(view().name("user/alertRegisterAuth"));
+    }
+
+    @DisplayName("회원가입 성공 페이지 api")
+    @Test
+    void registerSuccess() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/join/success")
+                )
+                .andDo(print())
+                .andExpect(view().name("user/registerSuccess"));
+    }
+
+    @DisplayName("비밀번호 찾기 url에 비밀번호 찾기 세션 토큰이 존재 하지않을 경우 비밀번호를 찾을 아이디 입력 페이지를 보여준다.")
+    @Test
+    void findPasswordFormFirstStep() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/help-password")
+                )
+                .andDo(print())
+                .andExpect(view().name("user/help/userLoginIdInputForm"));
+    }
+
+    @DisplayName("비밀번호 찾기요청에서 url에 비밀번호 찾기 세션 토큰이 만료된 경우 비밀번호를 찾을 아이디 입력 페이지로 리다이렉트한다.")
+    @Test
+    void findPasswordFormReturnFirstStep() throws Exception {
+        //given
+        String token = "token";
+        String menu = UserController.VIEW_PASSWORD_AUTH;
+        Mockito.when(redisService.existData(Mockito.anyString()))
+                .thenReturn(false);
+        //when
+        //then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/help-password")
+                                .param("token_help",token)
+                                .param("menu",menu)
+                )
+                .andDo(print())
+                .andExpect(redirectedUrl("/users/help-password"));
+    }
+
+    @DisplayName("비밀번호 찾기요청에서 비밀번호 찾기 세션 토큰이 유효하고, 인증 단계일 경우 비밀번호 인증 페이지를 보여준다.")
+    @Test
+    void findPasswordFormSecondStep() throws Exception {
+        //given
+        String token = "token";
+        String menu = UserController.VIEW_PASSWORD_AUTH;
+        Mockito.when(redisService.existData(Mockito.anyString()))
+                .thenReturn(true);
+        //when
+        //then
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/users/help-password")
+                        .param("token_help",token)
+                        .param("menu",menu)
+        )
+                .andDo(print())
+                .andExpect(view().name("user/help/userPasswordAuthForm"));
+    }
+
+    @DisplayName("비밀번호 찾기 url에 비밀번호 찾기 세션 토큰이 유효하고, 새 비밀번호 설정 단계일 경우 새 비밀번호 입력 페이지를 보여준다.")
+    @Test
+    void findPasswordFormFinalStep() throws Exception {
+        //given
+        String token = "token";
+        String menu = UserController.VIEW_PASSWORD_INPUT;
+        Mockito.when(redisService.existData(Mockito.anyString()))
+                .thenReturn(true);
+        //when
+        //then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/help-password")
+                                .param("token_help",token)
+                                .param("menu",menu)
+                )
+                .andDo(print())
+                .andExpect(view().name("user/help/userPasswordInputForm"));
     }
 
     @DisplayName("회원가입 요청을 받았을 때, 아이디에 대문자가 있을 경우 에러가 발생한다.")
