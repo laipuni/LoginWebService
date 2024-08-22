@@ -1,6 +1,9 @@
-package com.loginwebservice.loginwebservice.domain.user;
+package com.loginwebservice.loginwebservice.domain.user.service;
 
 import com.loginwebservice.loginwebservice.domain.PasswordEncodeService;
+import com.loginwebservice.loginwebservice.domain.user.Role;
+import com.loginwebservice.loginwebservice.domain.user.User;
+import com.loginwebservice.loginwebservice.domain.user.UserRepository;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

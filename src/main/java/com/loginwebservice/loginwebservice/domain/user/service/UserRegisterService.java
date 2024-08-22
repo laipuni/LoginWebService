@@ -1,6 +1,8 @@
-package com.loginwebservice.loginwebservice.domain.user;
+package com.loginwebservice.loginwebservice.domain.user.service;
 
 import com.loginwebservice.loginwebservice.Email.EmailService;
+import com.loginwebservice.loginwebservice.domain.user.User;
+import com.loginwebservice.loginwebservice.domain.user.UserRepository;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

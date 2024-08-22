@@ -1,5 +1,6 @@
-package com.loginwebservice.loginwebservice.domain.user;
+package com.loginwebservice.loginwebservice.domain.user.controller;
 
+import com.loginwebservice.loginwebservice.domain.user.service.UserRegisterService;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
 import com.loginwebservice.loginwebservice.redis.RedisService;

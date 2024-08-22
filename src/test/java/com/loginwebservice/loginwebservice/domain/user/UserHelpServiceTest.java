@@ -2,6 +2,7 @@ package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.Email.EmailService;
 import com.loginwebservice.loginwebservice.IntegrationTest;
+import com.loginwebservice.loginwebservice.domain.user.service.UserHelpService;
 import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

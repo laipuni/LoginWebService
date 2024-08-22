@@ -1,6 +1,7 @@
 package com.loginwebservice.loginwebservice.domain.user;
 
 import com.loginwebservice.loginwebservice.IntegrationTest;
+import com.loginwebservice.loginwebservice.domain.user.service.UserService;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
