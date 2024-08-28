@@ -31,35 +31,24 @@ public class EmailService {
         return true;
     }
 
+    public boolean sendEmail(final String toEmail, final String templatePath, final Map<String,String> variables, final String title){
+        mailSender.send(
+                createMailMessage(
+                        toEmail,
+                        resolveHtml(templatePath,variables),
+                        title
+                )
+        );
+        return true;
+    }
+
     private MimeMessage createMailMessage(final String toEmail, final String context,final String title){
         MimeMessage message = mailSender.createMimeMessage();
         try {
             message.addRecipients(Message.RecipientType.TO, toEmail);
             message.setSubject(title);
             message.setFrom(senderMail);
-            message.setText(context,"utf-8");
-        } catch (MessagingException exception){
-            log.debug("mail error = {}",exception.getCause());
-            throw new IllegalArgumentException("알 수 없는 에러가 발생했습니다.",exception.getCause());
-        }
-        return message;
-    }
-
-    public boolean sendEmail(final String toEmail, final String templatePath, final Map<String,String> variables, final String title){
-        mailSender.send(createHtmlMailMessage(toEmail,templatePath,variables,title));
-        return true;
-    }
-
-    private MimeMessage createHtmlMailMessage(
-            final String toEmail,final String templatePath,
-            final Map<String,String> variables, final String title
-    ){
-        MimeMessage message = mailSender.createMimeMessage();
-        try {
-            message.addRecipients(Message.RecipientType.TO, toEmail);
-            message.setSubject(title);
-            message.setFrom(senderMail);
-            message.setText(resolveHtml(templatePath,variables),"utf-8","html");
+            message.setText(context,"utf-8","html");
         } catch (MessagingException exception){
             log.debug("mail error = {}",exception.getCause());
             throw new IllegalArgumentException("알 수 없는 에러가 발생했습니다.",exception.getCause());
