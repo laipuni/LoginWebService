@@ -71,6 +71,7 @@ public class OAuthAttributes {
 
     public User toEntity() {
         return User.builder()
+                .userName(userName)
                 .name(name)
                 .email(email)
                 .picture(picture)
