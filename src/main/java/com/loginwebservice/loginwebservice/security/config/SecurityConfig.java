@@ -1,8 +1,8 @@
 package com.loginwebservice.loginwebservice.security.config;
 
-import com.loginwebservice.loginwebservice.security.formLogin.FormAuthenticationProvider;
-import com.loginwebservice.loginwebservice.security.formLogin.FormLoginFailureHandler;
-import com.loginwebservice.loginwebservice.security.formLogin.FormLoginSuccessHandler;
+import com.loginwebservice.loginwebservice.security.formLogin.provider.FormAuthenticationProvider;
+import com.loginwebservice.loginwebservice.security.formLogin.handler.FormLoginFailureHandler;
+import com.loginwebservice.loginwebservice.security.formLogin.handler.FormLoginSuccessHandler;
 import com.loginwebservice.loginwebservice.security.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

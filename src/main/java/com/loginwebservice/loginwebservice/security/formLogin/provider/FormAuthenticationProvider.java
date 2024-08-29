@@ -1,4 +1,4 @@
-package com.loginwebservice.loginwebservice.security.formLogin;
+package com.loginwebservice.loginwebservice.security.formLogin.provider;
 
 import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginLockException;
 import com.loginwebservice.loginwebservice.security.formLogin.service.CustomUserDetailService;
