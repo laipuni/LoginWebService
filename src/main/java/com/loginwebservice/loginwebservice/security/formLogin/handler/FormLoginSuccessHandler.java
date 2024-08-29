@@ -1,4 +1,4 @@
-package com.loginwebservice.loginwebservice.security.formLogin;
+package com.loginwebservice.loginwebservice.security.formLogin.handler;
 
 import com.loginwebservice.loginwebservice.security.formLogin.service.LoginFailService;
 import jakarta.servlet.ServletException;
