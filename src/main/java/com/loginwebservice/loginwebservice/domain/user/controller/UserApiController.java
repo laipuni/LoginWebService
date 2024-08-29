@@ -7,7 +7,7 @@ import com.loginwebservice.loginwebservice.domain.user.request.*;
 import com.loginwebservice.loginwebservice.domain.user.response.LoginIdValidationResponse;
 import com.loginwebservice.loginwebservice.domain.user.response.PasswordAuthCodeValidResponse;
 import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
-import com.loginwebservice.loginwebservice.redis.RedisService;
+import com.loginwebservice.loginwebservice.redis.RedisRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class UserApiController {
 
     private final UserService userService;
     private final UserHelpService userHelpService;
-    private final RedisService redisService;
+
     @GetMapping("/join/check-login-id")
     public ApiResponse<Boolean> isExistSameLoginIdUser(@RequestParam("loginId") String loginId){
         boolean result = userService.isExistSameLoginIdUSer(loginId);

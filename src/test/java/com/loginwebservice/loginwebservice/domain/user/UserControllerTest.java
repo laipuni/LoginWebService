@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loginwebservice.loginwebservice.domain.user.controller.UserController;
 import com.loginwebservice.loginwebservice.domain.user.service.UserRegisterService;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
-import com.loginwebservice.loginwebservice.redis.RedisService;
+import com.loginwebservice.loginwebservice.redis.RedisRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,7 +34,7 @@ class UserControllerTest {
     UserRegisterService userRegisterService;
 
     @MockBean
-    RedisService redisService;
+    RedisRepository redisRepository;
 
     @DisplayName("회원가입 화면을 반환한다.")
     @Test
@@ -119,7 +119,7 @@ class UserControllerTest {
         //given
         String token = "token";
         String menu = UserController.VIEW_PASSWORD_AUTH;
-        Mockito.when(redisService.existData(Mockito.anyString()))
+        Mockito.when(redisRepository.existData(Mockito.anyString()))
                 .thenReturn(false);
         //when
         //then
@@ -138,7 +138,7 @@ class UserControllerTest {
         //given
         String token = "token";
         String menu = UserController.VIEW_PASSWORD_AUTH;
-        Mockito.when(redisService.existData(Mockito.anyString()))
+        Mockito.when(redisRepository.existData(Mockito.anyString()))
                 .thenReturn(true);
         //when
         //then
@@ -157,7 +157,7 @@ class UserControllerTest {
         //given
         String token = "token";
         String menu = UserController.VIEW_PASSWORD_INPUT;
-        Mockito.when(redisService.existData(Mockito.anyString()))
+        Mockito.when(redisRepository.existData(Mockito.anyString()))
                 .thenReturn(true);
         //when
         //then

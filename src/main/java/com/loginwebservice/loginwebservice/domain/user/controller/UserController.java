@@ -3,7 +3,7 @@ package com.loginwebservice.loginwebservice.domain.user.controller;
 import com.loginwebservice.loginwebservice.domain.user.service.UserRegisterService;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddRequest;
 import com.loginwebservice.loginwebservice.domain.user.request.UserAddServiceRequest;
-import com.loginwebservice.loginwebservice.redis.RedisService;
+import com.loginwebservice.loginwebservice.redis.RedisRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,7 +22,7 @@ public class UserController {
 
 
     private final UserRegisterService userRegisterService;
-    private final RedisService redisService;
+    private final RedisRepository redisRepository;
 
     @GetMapping("/users/join")
     public String joinForm(@ModelAttribute(name = "user") UserAddRequest request){
@@ -92,7 +92,7 @@ public class UserController {
 
     private String viewNextFormBy(final String token, final String menu, final Model model) {
         //유효하지 않을 경우 해당 세션이 만료됐다는 메세지와 함께 login화면으로 가도록
-        if(!redisService.existData(token)){
+        if(!redisRepository.existData(token)){
             return "redirect:/users/help-password";
         }
 
@@ -110,7 +110,7 @@ public class UserController {
     }
 
     private String createViewUserPasswordInputForm(final String token, final Model model) {
-        String loginId = redisService.getData(token);
+        String loginId = redisRepository.getData(token);
         model.addAttribute("loginId",loginId);
         return "user/help/userPasswordInputForm";
     }

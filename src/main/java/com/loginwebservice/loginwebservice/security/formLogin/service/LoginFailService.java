@@ -3,7 +3,7 @@ package com.loginwebservice.loginwebservice.security.formLogin.service;
 import com.loginwebservice.loginwebservice.Email.EmailService;
 import com.loginwebservice.loginwebservice.domain.user.User;
 import com.loginwebservice.loginwebservice.domain.user.UserRepository;
-import com.loginwebservice.loginwebservice.redis.RedisService;
+import com.loginwebservice.loginwebservice.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +19,7 @@ public class LoginFailService {
 
     public static final String LOGIN_FAIL_COUNT_TOKEN = "[LoginCount]";
     public static final String LOGIN_LOCK = "[LoginLock]";
+    public static final String LOGIN_LOCK_HTML_PATH = "mail/loginFailLockMailForm";
 
     @Value("${spring.login.Fail.LockExpiredTime}")
     private long LoginFailLockExpiredTime;
@@ -27,30 +28,30 @@ public class LoginFailService {
     @Value("${spring.login.Fail.count}")
     private int LoginFailCount;
 
-    private final RedisService redisService;
+    private final RedisRepository redisRepository;
     private final EmailService emailService;
     private final UserRepository userRepository;
 
     public void alertLoginFailTo(final String loginId) {
-        //해당 아이디가 로그인 락이 걸려 있다면
-        if(redisService.existData(createLoginLockKeyBy(loginId))){
+        //해당 아이디가 로그인 락이 걸려 있다면 아무것도 하지 않고 종료
+        if(redisRepository.existData(createLoginLockKeyBy(loginId))){
             return;
         }
         String loginFailNumber = getLoginFailNumberBy(loginId);
         String incrLoginFailNum = incrementLoginFailNum(loginFailNumber);
         if(isHigherThanLoginFailCondition(incrLoginFailNum) ){
+            //해당 계정의 이메일로 계정이 최대 로그인 실패 횟수를 넘어 메일 전송
             log.info("[{}] : Fail higher than Condition! Must have Authentication!", loginId);
             User user = userRepository.findUserByLoginId(loginId)
                     .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
-            //해당 계정의 이메일로 계정이 최대 로그인 실패 횟수를 넘어 메일 전송
             emailService.sendEmail(
-                    user.getEmail(),"mail/loginFailLockMailForm", Map.of("date",LocalDate.now().toString()),createTitle()
+                    user.getEmail(),LOGIN_LOCK_HTML_PATH, Map.of("date",LocalDate.now().toString()),createTitle()
             );
-            redisService.deleteData(createLoginFailCountKeyBy(loginId));
-            redisService.setDataExpire(createLoginLockKeyBy(loginId),incrLoginFailNum,LoginFailLockExpiredTime);
+            redisRepository.deleteData(createLoginFailCountKeyBy(loginId));
+            redisRepository.setDataExpire(createLoginLockKeyBy(loginId),incrLoginFailNum,LoginFailLockExpiredTime);
         } else{
             //로그인 실패기록을 redis에 설정한 로그인 실패 토큰 유효시간 만큼 저장
-            redisService.setDataExpire(
+            redisRepository.setDataExpire(
                     createLoginFailCountKeyBy(loginId),incrLoginFailNum,LoginFailCountExpiredTime
             );
         }
@@ -70,9 +71,9 @@ public class LoginFailService {
 
     private String getLoginFailNumberBy(final String loginId) {
         String loginFailCountKey = createLoginFailCountKeyBy(loginId);
-        if(redisService.existData(loginFailCountKey)){
-            String loginFailNumber = redisService.getData(loginFailCountKey);
-            redisService.deleteData(loginFailCountKey);
+        if(redisRepository.existData(loginFailCountKey)){
+            String loginFailNumber = redisRepository.getData(loginFailCountKey);
+            redisRepository.deleteData(loginFailCountKey);
             return loginFailNumber;
         }
         return "0";
@@ -87,9 +88,9 @@ public class LoginFailService {
     }
 
     public boolean hasLoginLock(final String loginId){
-        return redisService.existData(createLoginLockKeyBy(loginId));
+        return redisRepository.existData(createLoginLockKeyBy(loginId));
     }
     public void resetLoginFailCount(final String loginId){
-        redisService.deleteData(createLoginFailCountKeyBy(loginId));
+        redisRepository.deleteData(createLoginFailCountKeyBy(loginId));
     }
 }

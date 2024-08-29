@@ -10,10 +10,10 @@ import org.springframework.data.redis.core.ValueOperations;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class RedisServiceTest extends IntegrationTest {
+class RedisRepositoryTest extends IntegrationTest {
 
     @Autowired
-    RedisService redisService;
+    RedisRepository redisRepository;
 
     @Autowired
     StringRedisTemplate redisTemplate;
@@ -28,7 +28,7 @@ class RedisServiceTest extends IntegrationTest {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(expectedKey,expectedValue);
         //when
-        String resultValue = redisService.getData(expectedKey);
+        String resultValue = redisRepository.getData(expectedKey);
         //then
         assertThat(resultValue).isEqualTo(expectedValue);
     }
@@ -42,7 +42,7 @@ class RedisServiceTest extends IntegrationTest {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(expectedKey,expectedValue);
         //when
-        Boolean result = redisService.existData(expectedKey);
+        Boolean result = redisRepository.existData(expectedKey);
         //then
         assertThat(result).isTrue();
     }
@@ -57,7 +57,7 @@ class RedisServiceTest extends IntegrationTest {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(expectedKey,expectedValue);
         //when
-        redisService.setDataExpire(expectedKey,expectedKey,duration);
+        redisRepository.setDataExpire(expectedKey,expectedKey,duration);
 
         //then
         Thread.sleep(1100 * duration);
@@ -74,7 +74,7 @@ class RedisServiceTest extends IntegrationTest {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         operations.set(expectedKey,expectedValue);
         //when
-        redisService.deleteData(expectedKey);
+        redisRepository.deleteData(expectedKey);
 
         //then
         Boolean result = redisTemplate.hasKey(expectedKey);
