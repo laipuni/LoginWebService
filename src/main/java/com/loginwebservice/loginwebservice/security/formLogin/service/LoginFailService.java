@@ -50,7 +50,7 @@ public class LoginFailService {
             redisRepository.deleteData(createLoginFailCountKeyBy(loginId));
             redisRepository.setDataExpire(createLoginLockKeyBy(loginId),incrLoginFailNum,LoginFailLockExpiredTime);
         } else{
-            //로그인 실패기록을 redis에 설정한 로그인 실패 토큰 유효시간 만큼 저장
+            //로그인 실패 기록을 설정한 로그인 시도 기록 유효시간 만큼 저장
             redisRepository.setDataExpire(
                     createLoginFailCountKeyBy(loginId),incrLoginFailNum,LoginFailCountExpiredTime
             );
