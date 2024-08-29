@@ -1,7 +1,5 @@
-package com.loginwebservice.loginwebservice.security.formLogin;
+package com.loginwebservice.loginwebservice.security.formLogin.exception;
 
-import com.loginwebservice.loginwebservice.security.formLogin.exception.LoginLockException;
-import com.loginwebservice.loginwebservice.security.formLogin.exception.NotAuthenticationUserException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
