@@ -32,7 +32,7 @@ public class UserHelpService {
     private final EmailService emailService;
     private final UserRepository userRepository;
 
-    public void helpUserId(final String name,final String email){
+    public void sendHelpLoginIdAuthMail(final String name, final String email){
         //입력한 정보가 일치하지 않을 경우 예외 발생
         if(!userRepository.existsUserByEmailAndName(email,name)){
             throw new IllegalArgumentException("입력하신 정보가 일치하는 유저는 존재하지 않습니다.");
@@ -55,7 +55,7 @@ public class UserHelpService {
         );
     }
 
-    public LoginIdValidationResponse validHelpUserIdAuthCode(final String authCode, final String name, final String email){
+    public LoginIdValidationResponse validHelpLoginIdAuthCode(final String authCode, final String name, final String email){
         String findAuthCode = redisRepository.getData(email);
         if(findAuthCode == null){
             throw new IllegalArgumentException("인증 요청을 다시 요청해주십시오.");
@@ -78,7 +78,7 @@ public class UserHelpService {
         return LoginIdSearchResponse.of(true,helpToken);
     }
 
-    public void helpUserPassword(final String name,final String email){
+    public void sendHelpPasswordAuthMail(final String name, final String email){
         //입력한 정보가 일치하지 않을 경우 예외 발생
         if(!userRepository.existsUserByEmailAndName(email,name)){
             throw new IllegalArgumentException("입력하신 정보가 일치하는 유저는 존재하지 않습니다.");

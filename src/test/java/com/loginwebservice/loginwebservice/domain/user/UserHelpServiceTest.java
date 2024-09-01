@@ -51,7 +51,7 @@ class UserHelpServiceTest extends IntegrationTest {
 
     @DisplayName("아이디 찾기 요청을 했을 때, 요청 받은 이메일의 유저가 없을 경우 에러가 발생한다.")
     @Test
-    void helpUserIdWithNotFoundEmail(){
+    void sendHelpLoginIdAuthMailWithNotFoundEmail(){
         //given
         String notFoundEmail = EXPECTED_EMAIL;
         String name = "김사자";
@@ -68,14 +68,14 @@ class UserHelpServiceTest extends IntegrationTest {
 
         //when
         //then
-        assertThatThrownBy(() -> userHelpService.helpUserId(name,notFoundEmail))
+        assertThatThrownBy(() -> userHelpService.sendHelpLoginIdAuthMail(name,notFoundEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("입력하신 정보가 일치하는 유저는 존재하지 않습니다.");
     }
 
     @DisplayName("아이디 찾기 인증 코드를 받았을 때, 아이디 찾기 인증 코드가 유효하지 않을 경우 에러가 발생한다.")
     @Test
-    void verifyHelpUserIdAuthCodeWithNotFoundAuthCode(){
+    void validHelpLoginIdAuthCodeWithNotFoundAuthCode(){
         //given
         String expectedEmail = EXPECTED_EMAIL;
         String expectedAuthCode = "authcode";
@@ -83,7 +83,7 @@ class UserHelpServiceTest extends IntegrationTest {
         //when
         //then
         assertThatThrownBy(()->
-                userHelpService.validHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
+                userHelpService.validHelpLoginIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("인증 요청을 다시 요청해주십시오.");
@@ -92,7 +92,7 @@ class UserHelpServiceTest extends IntegrationTest {
 
     @DisplayName("아이디 찾기 인증 코드를 받았을 때, 아이디 찾기 인증 코드와 다를 경우 에러가 발생한다.")
     @Test
-    void verifyHelpUserIdAuthCodeWithWrongAuthCode(){
+    void validHelpLoginIdAuthCodeWithWrongAuthCode(){
         //given
         String expectedEmail = EXPECTED_EMAIL;
         String expectedAuthCode = "authcode";
@@ -103,7 +103,7 @@ class UserHelpServiceTest extends IntegrationTest {
         //when
         //then
         assertThatThrownBy(()->
-                userHelpService.validHelpUserIdAuthCode(wrongAuthCode,expectedName,expectedEmail)
+                userHelpService.validHelpLoginIdAuthCode(wrongAuthCode,expectedName,expectedEmail)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("인증 코드를 잘못 작성하셨습니다. 입력한 정보가 맞는지 다시 확인해주세요.");
@@ -111,7 +111,7 @@ class UserHelpServiceTest extends IntegrationTest {
 
     @DisplayName("아이디 찾기 인증 코드를 받았을 때, 조회할 이름과 이메일과 일치하는 유저가 존재하지 않을 경우 에러가 발생한다.")
     @Test
-    void verifyHelpUserIdAuthCodeWithNotFoundUser(){
+    void validHelpLoginIdAuthCodeWithNotFoundUser(){
         //given
         String expectedEmail = EXPECTED_EMAIL;
         String expectedAuthCode = "authcode";
@@ -122,7 +122,7 @@ class UserHelpServiceTest extends IntegrationTest {
         //when
         //then
         assertThatThrownBy(()->
-                userHelpService.validHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
+                userHelpService.validHelpLoginIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("해당 정보와 일치하는 유저는 존재하지 않습니다.");
@@ -171,7 +171,7 @@ class UserHelpServiceTest extends IntegrationTest {
 
     @DisplayName("비밀번호 찾기 인증코드를 요청할 때, 인증코드가 존재할 경우 이전 인증코드를 삭제한다.")
     @Test
-    void helpUserPassword(){
+    void sendHelpPasswordAuthMail(){
         //given
         String expectedName="김사자";
         String expectedEmail = "email@email.com";
@@ -201,7 +201,7 @@ class UserHelpServiceTest extends IntegrationTest {
                 ))
                 .thenReturn(true);
         //when
-        userHelpService.helpUserPassword(expectedName,expectedEmail);
+        userHelpService.sendHelpPasswordAuthMail(expectedName,expectedEmail);
 
         //then
         assertThat(redisTemplate.hasKey(expectedEmail)).isTrue();
@@ -210,7 +210,7 @@ class UserHelpServiceTest extends IntegrationTest {
 
     @DisplayName("비밀번호 찾기 인증코드를 요청할 때, 이름, 이메일의 유저가 존재하지 않을 경우 에러가 발생한다.")
     @Test
-    void helpUserPasswordWithNotExistUser(){
+    void sendHelpPasswordAuthMailWithNotExistUser(){
         //given
         String expectedName="김사자";
         String expectedEmail = "email@email.com";
@@ -226,7 +226,7 @@ class UserHelpServiceTest extends IntegrationTest {
                 .thenReturn(true);
         //when
         //then
-        assertThatThrownBy(() ->userHelpService.helpUserPassword(expectedName,expectedEmail))
+        assertThatThrownBy(() ->userHelpService.sendHelpPasswordAuthMail(expectedName,expectedEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageMatching("입력하신 정보가 일치하는 유저는 존재하지 않습니다.");
     }

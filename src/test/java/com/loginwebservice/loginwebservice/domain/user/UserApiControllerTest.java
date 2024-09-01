@@ -199,7 +199,7 @@ class UserApiControllerTest {
                 .build();
 
         Mockito.when(
-                    userHelpService.validHelpUserIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
+                    userHelpService.validHelpLoginIdAuthCode(expectedAuthCode,expectedName,expectedEmail)
                 ).thenReturn(response);
 
         //when

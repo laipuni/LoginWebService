@@ -1,13 +1,12 @@
 package com.loginwebservice.loginwebservice.domain.user.controller;
 
 import com.loginwebservice.loginwebservice.api.ApiResponse;
-import com.loginwebservice.loginwebservice.domain.user.service.UserHelpService;
-import com.loginwebservice.loginwebservice.domain.user.service.UserService;
 import com.loginwebservice.loginwebservice.domain.user.request.*;
+import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
 import com.loginwebservice.loginwebservice.domain.user.response.LoginIdValidationResponse;
 import com.loginwebservice.loginwebservice.domain.user.response.PasswordAuthCodeValidResponse;
-import com.loginwebservice.loginwebservice.domain.user.response.LoginIdSearchResponse;
-import com.loginwebservice.loginwebservice.redis.RedisRepository;
+import com.loginwebservice.loginwebservice.domain.user.service.UserHelpService;
+import com.loginwebservice.loginwebservice.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,16 +34,16 @@ public class UserApiController {
         return ApiResponse.of(HttpStatus.OK,result);
     }
 
-    @PostMapping("/send-id-auth-code")
-    public ApiResponse<Object> sendLoginIdAuthCode(@Valid @RequestBody LoginIdAuthCodeSendRequest request){
-        userHelpService.helpUserId(request.getName(),request.getEmail());
-        return ApiResponse.of(HttpStatus.OK,null);
-    }
-
     @PostMapping("/valid-id-auth-code")
     public ApiResponse<LoginIdValidationResponse> validLoginIdAuthCode(@Valid @RequestBody LoginIdAuthCodeValidRequest request){
-        LoginIdValidationResponse response = userHelpService.validHelpUserIdAuthCode(request.getAuthCode(), request.getName(), request.getEmail());
+        LoginIdValidationResponse response = userHelpService.validHelpLoginIdAuthCode(request.getAuthCode(), request.getName(), request.getEmail());
         return ApiResponse.of(HttpStatus.OK,response);
+    }
+
+    @PostMapping("/send-id-auth-code")
+    public ApiResponse<Object> sendLoginIdAuthCode(@Valid @RequestBody LoginIdAuthCodeSendRequest request){
+        userHelpService.sendHelpLoginIdAuthMail(request.getName(),request.getEmail());
+        return ApiResponse.of(HttpStatus.OK,null);
     }
 
     @GetMapping("/search-loginId")
@@ -55,7 +54,7 @@ public class UserApiController {
 
     @PostMapping("/send-password-auth-code")
     public ApiResponse<Object> sendPasswordAuthCode(@Valid @RequestBody PasswordAuthCodeSendRequest request){
-        userHelpService.helpUserPassword(request.getName(), request.getEmail());
+        userHelpService.sendHelpPasswordAuthMail(request.getName(), request.getEmail());
         return ApiResponse.of(HttpStatus.OK,null);
     }
     
