@@ -91,6 +91,9 @@
 <img src="https://github.com/user-attachments/assets/2449b6d6-6c53-491b-9aa6-7a09aa9a097c" style="width:400px">
 </img>
 
+<img src="https://github.com/user-attachments/assets/4a18d421-0972-4f69-8507-cf5f5316fc0a" style="width:400px">
+</img>
+
 ### 2단계 비밀번호 인증 요청 및 인증 메일 수신(menu = viewPasswordAuth, token_help필요 O)
 
 <img src="https://github.com/user-attachments/assets/3fed8791-3cbb-401d-a3eb-0e76eb871278" style="width:800px">
@@ -110,6 +113,7 @@
 ### 3단계 비밀 번호 재설정(menu = viewPasswordInput, token_help필요 O)
 <img src="https://github.com/user-attachments/assets/f356f8e4-85d2-431c-9942-cac4382cbae2" style="width:800px">
 </img>
+
 1. 새 비밀번호와 비밀번호 확인 입력
 2. 이전과 같은 비밀번호이거나 비밀번호 형식에 맞지 않을 경우 경고 메세지 발생
 
